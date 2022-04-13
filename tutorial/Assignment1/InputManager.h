@@ -10,11 +10,17 @@
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 			Assignment1* scn = (Assignment1*)rndr->GetScene();
 			double x2, y2;
-			
+				
 			glfwGetCursorPos(window, &x2, &y2);
 		if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_LEFT)
 		{
-			rndr->Pressed();	
+		
+			scn->initcx = x2;
+			scn->initcy = y2;
+			scn->initx = scn->x*400;
+			scn->inity = scn->y*400;
+			rndr->Pressed();
+			
 		}
 		else if(action == GLFW_RELEASE && button == GLFW_MOUSE_BUTTON_LEFT){
 			rndr->Pressed();
@@ -25,18 +31,13 @@
 	{
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Assignment1* scn = (Assignment1*)rndr->GetScene();
-		
-		// if (rndr->IsPicked())
-		// {
-		// 	rndr->UpdateZpos((int)yoffset);
-		// 	rndr->MouseProccessing(GLFW_MOUSE_BUTTON_MIDDLE);
-		// }
-		// else
-		// {
-		// 	rndr->MoveCamera(0, rndr->zTranslate, (float)yoffset);
-		// }
-		scn->scroll += (float)yoffset;
-		std::cout << "pixel width:" << (1.0/400.0)*scn->scroll << std::endl;
+		if (yoffset > 0){
+			if (scn->scroll > 0.1)
+				scn->scroll -= 0.01;
+		}
+		else
+			scn->scroll += 0.01;
+		std::cout << "pixel width:" << 1.0/800 * (1/scn->scroll) << std::endl;
 		
 	}
 	
@@ -48,25 +49,9 @@
 		rndr->UpdatePosition((float)xpos,(float)ypos);
 		if (rndr->IsPressed())
 		{
-			scn->x = ((float)xpos-400.0)/400.0;
-			scn->y = ((float)ypos-400.0)/400.0;
+			scn->x = (scn->initx + xpos - scn->initcx)/400.0;
+			scn->y = (scn->inity + ypos - scn->initcy)/400.0;
 		}
-		// if (rndr->CheckViewport(xpos,ypos, 0))
-		// {
-		// 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
-		// 	{
-
-				// rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT);
-		// 	}
-		// 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-		// 	{
-				
-		// 		rndr->MouseProccessing(GLFW_MOUSE_BUTTON_LEFT);
-		// 	}
-		// 	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany())
-		// 			rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT);
-
-		// }
 	}
 
 	void glfw_window_size_callback(GLFWwindow* window, int width, int height)

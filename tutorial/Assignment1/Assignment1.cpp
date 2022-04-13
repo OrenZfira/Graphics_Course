@@ -26,6 +26,8 @@ Assignment1::Assignment1()
 	scroll = 1;
 	x = 0;
 	y = 0;
+	initx = 0;
+	inity=0;
 }
 
 //Assignment1::Assignment1(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
