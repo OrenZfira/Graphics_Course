@@ -1,4 +1,4 @@
- #version 330 
+#version 330 
 
 uniform vec4 eye;
 uniform vec4 ambient;
@@ -13,9 +13,11 @@ in vec3 position0;
 in vec3 normal0;
 
 float intersection(inout int index, vec3 source, vec3 v){
-    float tmin = 1.0e12;
+    float tmin = 1.0e10;
     int indx = -1;
     for(int i = 0; i<sizes.x; i++){
+        if(i == index)
+            continue;
         float t;
         if (objects[i].w <= 0 ) { //plane
             vec3 n = normalize(objects[i].xyz);
@@ -48,21 +50,23 @@ vec3 phong(int index, vec3 source, vec3 v, float factor){
     vec3 diff = objColors[index].rgb * factor;
     float spec = 0.7;
     vec3 normal;
-    if (objects[index].w < 0)
+    
+    if (objects[index].w <= 0)
         normal = normalize(objects[index].xyz);
     else
         normal = normalize(objects[index].xyz - source);//-normalize(source - objects[index].xyz);
-    for(int i=0; i<sizes.y; i++){
-        if (lightsDirection[i].w < 0.5 ){
+    
+    for(int i = 0; i<sizes.y; i++){
+        if (lightsDirection[i].w < 1 ){
             int indx = index;
             vec3 l = normalize(lightsDirection[i].xyz);
-            float t = intersection(indx, source, l);
-            if (indx < 0){ //checking for intersection
+            float t = intersection(indx, source, -l);
+            if (indx < 0 || objects[indx].w <= 0){ //checking for intersection
                 vec3 r = normalize(reflect(l,normal));
                 color += max(vec3(0.0, 0.0, 0.0), (diff*(dot(normal,l)*lightsIntensity[i].rgb)));//diffuse
-                if(dot(l, normal)>0)
-                    color += max( vec3(0.0, 0.0, 0.0), spec*(pow(dot(v,r), objColors[index].a)*lightsIntensity[i].rgb));//specular
-                if(objects[indx].w <= 0){
+                if( objects[index].w <= 0 ||dot(l, normal)>0.0)
+                    color += max( vec3(0.0, 0.0, 0.0), spec*(pow(dot(v,r), shine)*lightsIntensity[i].rgb));//specular
+                if(objects[index].w <= 0){
                     color = min(vec3(1.0,1.0,1.0), color);
                 }
             }
@@ -70,17 +74,21 @@ vec3 phong(int index, vec3 source, vec3 v, float factor){
         else{
             int indx = -1;
             vec3 l = normalize(source - lightsPosition[i].xyz);//vector from the light source to the object
-            if(dot(l, normalize(lightsDirection[i].xyz)) >= lightsPosition[i].w){
-                float t = intersection(indx, lightsPosition[index].xyz, l);
+            
+            if(dot(l, normalize(lightsDirection[i].xyz)) <  lightsPosition[i].w){
+                continue;}
+            else {
+                float t = intersection(indx, lightsPosition[i].xyz, l);
                 if (indx == index){
                     vec3 r = normalize(reflect(l,normal));
                     color += max(vec3(0.0, 0.0, 0.0), (diff*(dot(normal,l)*lightsIntensity[i].rgb)));//diffuse
-                    if(dot(l, normal)>0)
-                        color += max( vec3(0.0, 0.0, 0.0), spec*(pow(dot(v,r), objColors[index].a)*lightsIntensity[i].rgb));//specular
+                    if(objects[index].w <= 0 || dot(l, normal)>0)
+                        color += max( vec3(0.0, 0.0, 0.0), spec*(pow(dot(v,r), shine)*lightsIntensity[i].rgb));//specular
+                    if(objects[index].w <= 0){
+                        color = min(vec3(1.0,1.0,1.0), color);
+                    }
                 }
-                if(objects[indx].w <= 0){
-                    color = min(vec3(1.0,1.0,1.0), color);
-                }
+                
             }
         }
         
