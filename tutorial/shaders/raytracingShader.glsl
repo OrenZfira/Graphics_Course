@@ -15,34 +15,62 @@ in vec3 normal0;
 float intersection(inout int index, vec3 source, vec3 v){
     float tmin = 1.0e10;
     int indx = -1;
-    for(int i = 0; i<sizes.x; i++){
-        if(i == index)
-            continue;
-        float t;
-        if (objects[i].w <= 0 ) { //plane
-            vec3 n = normalize(objects[i].xyz);
-            vec3 p0o = -objects[i].w*n/length(objects[i].xyz) - source;
-            t = dot(p0o, n)/dot(v,n);
-        }
-        else { //sphere
-            vec3 p0O = source - objects[i].xyz;
-            float b = dot(v,p0O);
-            float c = dot(p0O,p0O)-objects[i].w*objects[i].w;
-            float d = b*b-c;
-            if (d>=0){
-                float t1 = -b + sqrt(d);
-                float t2 = -b - sqrt(d);
-                t = min(t1,t2);
+    for (int j = 0; j<5; j++){
+        for(int i = 0; i<sizes.x; i++){
+            if(i == index)
+                continue;
+            float t;
+            if (objects[i].w <= 0 ) { //plane
+                vec3 n = normalize(objects[i].xyz);
+                t = -(dot(source.xyz,n) + objects[i].w)/(dot(v,n));
+            }
+            else { //sphere
+                vec3 p0O = source - objects[i].xyz;
+                float b = dot(v,p0O);
+                float c = dot(p0O,p0O)-objects[i].w*objects[i].w;
+                float d = b*b-c;
+                if (d>=0){
+                    float t1 = -b + sqrt(d);
+                    float t2 = -b - sqrt(d);
+                    t = min(t1,t2);
+                    if (t < 0)
+                        t=max(t1,t2);
+                }
+            }
+            if (t < tmin && t >=0) {
+                tmin = t;
+                indx = i;
             }
         }
-        if (t < tmin && t >=0) {
-            tmin = t;
-            indx = i;
+        if(indx >= sizes.w || indx == -1) break;
+        float t;
+        vec3 n = normalize(objects[indx].xyz - source);
+        float theta1 = acos(dot(n, -v));
+        float theta2 = asin(sin(theta1)/1.5);
+        source = source + tmin*v;               //new source from where we intersect with the sphere
+        v = (2.0/3.0 * cos(theta1) - cos(theta2))*n - 2.0/3.0*-v;       //finding new v using snell's law
+
+        //finding intersection with other side of sphere
+        vec3 p0O = source - objects[indx].xyz;
+        float b = dot(v,p0O);
+        float c = dot(p0O,p0O)-objects[indx].w*objects[indx].w;
+        float d = b*b-c;
+        if (d>=0){//maybe not needed
+            float t1 = -b + sqrt(d);
+            float t2 = -b - sqrt(d);
+            t=max(t1,t2);
         }
+        n = normalize(objects[indx].xyz - source);
+        theta1 = acos(dot(-n, -v));
+        theta2 = asin(sin(theta1)/1.5);
+        source = source + t*v; // new source from final intersection with sphere
+        v = (1.5 * cos(theta1) - cos(theta2))*-n - 1.5*-v;  //vector coming out of the sphere
     }
     index = indx;
     return tmin;
 }
+
+
 
 vec3 phong(int index, vec3 source, vec3 v, float factor){
     vec3 color = ambient.rgb*objColors[index].rgb;
@@ -103,7 +131,7 @@ void main(){
     if (index >= 0){
         vec3 p = position0 + eye.xyw + t*v;
         vec3 normal;
-        for(int i = 0;i < 5 && index < sizes.z-0.1f; i++){
+        for(int i = 0;i < 5 && index < sizes.z+sizes.w-0.1f && index >= sizes.w; i++){
             if(objects[index].w <= 0)
                 normal = normalize(objects[index].xyz);
             else
@@ -119,6 +147,5 @@ void main(){
             gl_FragColor = vec4(phong(index,p,v,0.5),1);
         else 
             gl_FragColor = vec4(phong(index,p,v,1.0),1);      
-        // gl_FragColor = vec4(phong(index,p,v),1);
     }
 }

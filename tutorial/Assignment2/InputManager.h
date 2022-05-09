@@ -3,45 +3,96 @@
 #include "igl/opengl/glfw/renderer.h"
 #include "Assignment2.h"
 #include "imgui/imgui.h"
+#include <math.h>
+	int reverse = 1;
 
+	float find_phi(float x, float y){
+		float pi = (float)atan(1)*4;
+		if(x > 0) return atan(y/x);
+		else if(x < 0){
+			if(y >= 0)
+				return atan(y/x) + pi;
+			else
+				return atan(y/x) - pi;
+		}
+		else
+			if (y>0)
+				return pi/2;
+			else if(y<0)
+				return -pi/2;
+	}
+
+	void rotate(Assignment2* scn, float theta_add, float phi_add,int i){
+		float pi = (float)atan(1)*4;
+		float x = scn->scnData.objects[i][0] - scn->scnData.eye[0];
+		float y = scn->scnData.objects[i][1] - scn->scnData.eye[1];
+		float z = scn->scnData.objects[i][2] - scn->scnData.eye[2];
+		float r = sqrt(x*x+y*y+z*z);
+		float theta = acos(y/r);
+		float phi = find_phi(x,z);
+		if (abs(x) <= 0.1f && abs(z) <= 0.1f ){
+			if (theta > pi/2 && theta_add < 0)
+				return;
+			if (theta < pi/2 && theta_add > 0)
+				return;
+		}
+		
+		theta+=reverse*theta_add;
+		phi += phi_add;
+		float newx = r*sin(theta)*cos(phi) + scn->scnData.eye[0];
+		float newz = r*sin(theta)*sin(phi) + scn->scnData.eye[2];
+		float newy = r*cos(theta) + scn->scnData.eye[1];
+		scn->scnData.objects[i][0] = newx;
+		scn->scnData.objects[i][1] = newy;
+		scn->scnData.objects[i][2] = newz;
+					
+	}
+
+	
+	void rotatelights(Assignment2* scn, float theta_add, float phi_add,int i){
+		float pi = (float)atan(1)*4;
+		float x = scn->scnData.directions[i][0] - scn->scnData.eye[0];
+		float y = scn->scnData.directions[i][1] - scn->scnData.eye[1];
+		float z = scn->scnData.directions[i][2] - scn->scnData.eye[2];
+		float r = sqrt(x*x+y*y+z*z);
+		float theta = acos(y/r);
+		float phi = find_phi(x,z);
+		if (abs(x) <= 0.1f && abs(z) <= 0.1f ){
+			if (theta > pi/2 && theta_add < 0)
+				return;
+			if (theta < pi/2 && theta_add > 0)
+				return;
+		}
+		
+		theta+=theta_add;
+		phi += phi_add;
+		float newx = r*sin(theta)*cos(phi) + scn->scnData.eye[0];
+		float newz = r*sin(theta)*sin(phi) + scn->scnData.eye[2];
+		float newy = r*cos(theta) + scn->scnData.eye[1];
+		scn->scnData.directions[i][0] = newx;
+		scn->scnData.directions[i][1] = newy;
+		scn->scnData.directions[i][2] = newz;
+					
+	}
 
 	void glfw_mouse_callback(GLFWwindow* window,int button, int action, int mods)
-	{	
+	{	Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
+		Assignment2* scn = (Assignment2*)rndr->GetScene();
 		if (action == GLFW_PRESS)
 		{
-			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
-			Assignment2* scn = (Assignment2*)rndr->GetScene();
 			double x2, y2;
-			
 			glfwGetCursorPos(window, &x2, &y2);
 			rndr->UpdatePress(x2, y2);
 
-	
-			scn->SetPosition((int)x2, (int)y2);
 			scn->Intersection(Eigen::Vector3f((float)x2 / 400.0f - 1, 1 - (float)y2 / 400.0f, 0));
-			if (rndr->Picking((int)x2, (int)y2))
-			{
-				rndr->UpdatePosition(x2, y2);
-				if(button == GLFW_MOUSE_BUTTON_LEFT)
-					rndr->Pressed();
-			}
-			else
-			{
-				rndr->UnPick(2);
-			}
-			scn->SetPress();
-			if (button == GLFW_MOUSE_BUTTON_RIGHT)
-				scn->SetRightPress();
-		}
+		}	
 		else
 		{
-			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
-			Assignment2* scn = (Assignment2*)rndr->GetScene();
-			scn->SetPress();
-			if (button == GLFW_MOUSE_BUTTON_RIGHT)
-				scn->SetRightPress();
 			rndr->UnPick(2);
 		}
+		scn->SetPress();
+		if (button == GLFW_MOUSE_BUTTON_RIGHT)
+			scn->SetRightPress();
 	}
 	
 	void glfw_scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
@@ -118,20 +169,42 @@
 
 			case GLFW_KEY_UP:
 				//rndr->MoveCamera(0, scn->xRotate, 0.05f);
-				scn->RotateEye(0.05f, true);
+				// scn->RotateEye(0.05f, true);
+				for(int i=0; i<scn->scnData.objects.size(); i++){
+					rotate(scn, 0.01f, 0, i);
+				}
+				for(int i=0; i< scn->scnData.directions.size(); i++){
+					rotatelights(scn, 0.01f, 0, i);
+				}
 				break;
 			case GLFW_KEY_DOWN:
 				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
 				//cout<< "down: "<<endl;
-				scn->RotateEye(-0.05f, true);
+				for(int i=0; i<scn->scnData.objects.size(); i++){
+					rotate(scn, -0.01f, 0, i);
+				}
+				for(int i=0; i<scn->scnData.directions.size(); i++){
+					rotatelights(scn, -0.01f, 0, i);
+				}
 				break;
 			case GLFW_KEY_LEFT:
-				scn->RotateEye(0.05f, false);
+				for(int i=0; i<scn->scnData.objects.size(); i++){
+					rotate(scn, 0,0.1f, i);
+				}
+				for(int i=0; i<scn->scnData.directions.size(); i++){
+					rotatelights(scn, 0,0.1f, i);
+				}
+
 				break;
 			case GLFW_KEY_RIGHT:
 				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
 				//cout<< "down: "<<endl;
-				scn->RotateEye(-0.05f, false);
+				for(int i=0; i<scn->scnData.objects.size(); i++){
+					rotate(scn, 0, -0.1f, i);
+				}
+				for(int i=0; i<scn->scnData.directions.size(); i++){
+					rotatelights(scn, 0, -0.1f, i);
+				}
 				break;
 			case GLFW_KEY_U:
 				rndr->MoveCamera(0, scn->yTranslate, 0.25f);

@@ -15,7 +15,7 @@ static void printMat(const Eigen::Matrix4d& mat)
 
 Assignment2::Assignment2()
 {
-	SceneParser("data/scenes/scene1.txt",&scnData);
+	SceneParser("data/scenes/scene3.txt",&scnData);
 	xResolution = 800;
 	yResolution = 800;
 	//x = 0.5f;
@@ -111,7 +111,7 @@ void Assignment2::SetPosition(int x, int y)
 	{
 		xRel = -xOldPos + (float)x / xResolution;
 		yRel = yOldPos - (float)y / yResolution;
-
+		
 		xOldPos += (float)xRel;
 		yOldPos -= (float)(yRel);
 		if (isRightPressed)
