@@ -15,7 +15,7 @@ static void printMat(const Eigen::Matrix4d& mat)
 
 Assignment2::Assignment2()
 {
-	SceneParser("data/scenes/scene3.txt",&scnData);
+	SceneParser("data/scenes/scene1.txt",&scnData);
 	xResolution = 800;
 	yResolution = 800;
 	//x = 0.5f;
@@ -24,6 +24,8 @@ Assignment2::Assignment2()
 	isRightPressed = false;
 	isPressed = false;
 	time = 0;
+	phi = 0;
+	theta = 0;
 }
 
 //Assignment2::Assignment2(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
@@ -68,10 +70,35 @@ void Assignment2::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& Vie
 	//s->SetUniform1f("x",x);
 	//s->SetUniform1f("y",y);
 	
-	
+	 Eigen::Matrix4f roty;
+	 roty << cos(phi),0,-sin(phi),0,
+                    0,1,0,0,
+                    sin(phi), 0,cos(phi),0,
+                    0,0,0,1;
+    Eigen::Matrix4f rotx;
+	rotx <<1,0,0,0,
+        0,cos(theta),sin(theta),0,
+        0,-sin(theta),cos(theta),0,
+		0,0,0,1;
+
+    Eigen::Matrix4f rotz;
+	rotz << cos(phi), sin(phi),0,0,
+                    -sin(phi), cos(phi), 0,0,
+                     0,0,1,0,
+                     0,0,0,1;
+    
+    Eigen::Matrix4f move;
+	move << 1,0,0,0,
+                     0,1,0,0,
+                     0,0,1,-scnData.eye[2],
+                     0,0,0,1;
+	Eigen::Matrix4f Model1 = Model * move.inverse() *roty*rotx*move;
 	s->SetUniformMat4f("Proj", Proj);
 	s->SetUniformMat4f("View", View);
-	s->SetUniformMat4f("Model", Model);
+	s->SetUniformMat4f("Model", Model1);
+	
+	s->SetUniform1f("theta", theta);
+	s->SetUniform1f("phi", phi);
 
 	s->SetUniform4fv("eye",&scnData.eye,1);
 	s->SetUniform4fv("ambient", &scnData.ambient, 1);
@@ -118,8 +145,8 @@ void Assignment2::SetPosition(int x, int y)
 		{
 			if (sourceIndx >= 0)
 			{
-				scnData.objects[sourceIndx][0] += xRel * 2;
-				scnData.objects[sourceIndx][1] += yRel * 2;
+				scnData.objects[sourceIndx][0] += xRel *2;
+				scnData.objects[sourceIndx][1] += yRel *2;
 			}
 		}
 		else

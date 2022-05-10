@@ -13,6 +13,8 @@ public:
 	float time;
 	Assignment2();
 	SceneData scnData;
+	float theta;
+	float phi;
 //	Assignment2(float angle,float relationWH,float near, float far);
 	
 	void Init();
