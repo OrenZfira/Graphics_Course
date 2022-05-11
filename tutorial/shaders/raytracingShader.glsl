@@ -164,7 +164,10 @@ void main(){
     if (index >= 0){
         vec3 p = position0 + eye1.xyw + t*v;
         vec3 normal;
-        for(int i = 0;i < 5 && index < sizes.z+sizes.w-0.1f && index>= sizes.w-0.1f; i++){
+        for(int i = 0;i < 5 && index < sizes.z+sizes.w-0.1f; i++){
+            if (index >= 0 && index <sizes.w -0.1f){
+                v = snell(index,p,v);
+            }
             if(objects[index].w <= 0)
                 normal = normalize(objects[index].xyz);
             else
@@ -172,9 +175,7 @@ void main(){
             v = normalize(reflect(v,normal));
             t = intersection(index, p, v);
             p += t*v;
-            if (index >= 0 && index <sizes.w -0.1f){
-                v = snell(index,p,v);
-            }
+            
         }
         
         float x = p.x;
