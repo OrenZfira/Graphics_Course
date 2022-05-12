@@ -138,7 +138,7 @@ void main(){
                 normal = normalize(objects[index].xyz);
             else
                 normal = normalize(p - objects[index].xyz);
-            v = normalize(reflect(v,normal));//why are we reflecting after snell's law? we already got the vector we wanted
+            v = normalize(reflect(v,normal));
             t = intersection(index, p, v);
             p += t*v;
             
