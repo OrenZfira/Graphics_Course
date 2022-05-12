@@ -17,62 +17,31 @@ in vec3 normal0;
 float intersection(inout int index, vec3 source, vec3 v){
     float tmin = 1.0e10;
     int indx = -1;
-    for (int j = 0; j<5; j++){
-        for(int i = 0; i<sizes.x; i++){
-            if(i == index)
-                continue;
-            float t = -1;
-            if (objects[i].w <= 0 ) { //plane
-                vec3 n = normalize(objects[i].xyz);
-                t = -(dot(source.xyz,n) + objects[i].w)/(dot(v,n));
-            }
-            else { //sphere
-                vec3 p0O = source - objects[i].xyz;
-                float b = dot(v,p0O);
-                float c = dot(p0O,p0O)-objects[i].w*objects[i].w;
-                float d = b*b-c;
-                if (d>=0){
-                    float t1 = -b + sqrt(d);
-                    float t2 = -b - sqrt(d);
-                    t = min(t1,t2);
-                    if (t < 0)
-                        t=max(t1,t2);
-                }
-            }
-            if (t < tmin && t >=0) {
-                tmin = t;
-                indx = i;
+    for(int i = 0; i<sizes.x; i++){
+        if(i == index)
+            continue;
+        float t = -1;
+        if (objects[i].w <= 0 ) { //plane
+            vec3 n = normalize(objects[i].xyz);
+            t = -(dot(source.xyz,n) + objects[i].w)/(dot(v,n));
+        }
+        else { //sphere
+            vec3 p0O = source - objects[i].xyz;
+            float b = dot(v,p0O);
+            float c = dot(p0O,p0O)-objects[i].w*objects[i].w;
+            float d = b*b-c;
+            if (d>=0){
+                float t1 = -b + sqrt(d);
+                float t2 = -b - sqrt(d);
+                t = min(t1,t2);
+                if (t < 0)
+                    t=max(t1,t2);
             }
         }
-        break;
-        if(indx >= sizes.w || indx == -1) break;
-        float t=-1;
-        vec3 n = normalize(objects[indx].xyz - source);
-        float theta1 = acos(dot(n, -v));
-        float theta2 = asin(sin(theta1)/1.5);
-        source = source + tmin*v;               //new source from where we intersect with the sphere
-        v = (2.0/3.0 * cos(theta1) - cos(theta2))*n - 2.0/3.0*-v;       //finding new v using snell's law
-
-        //finding intersection with other side of sphere
-        vec3 p0O = source - objects[indx].xyz;
-        float b = dot(v,p0O);
-        float c = dot(p0O,p0O)-objects[indx].w*objects[indx].w;
-        float d = b*b-c;
-        if (d>=0){//maybe not needed
-            float t1 = -b + sqrt(d);
-            float t2 = -b - sqrt(d);
-            t=max(t1,t2);
-            n = normalize(objects[indx].xyz - source);
-            theta1 = acos(dot(-n, -v));
-            theta2 = asin(sin(theta1)/1.5);
-            source = source + t*v; // new source from final intersection with sphere
-            v = (1.5 * cos(theta1) - cos(theta2))*-n - 1.5*-v;  //vector coming out of the sphere
+        if (t < tmin && t >=0) {
+            tmin = t;
+            indx = i;
         }
-        // n = normalize(objects[indx].xyz - source);
-        // theta1 = acos(dot(-n, -v));
-        // theta2 = asin(sin(theta1)/1.5);
-        // source = source + t*v; // new source from final intersection with sphere
-        // v = (1.5 * cos(theta1) - cos(theta2))*-n - 1.5*-v;  //vector coming out of the sphere
     }
     index = indx;
     return tmin;
@@ -92,9 +61,6 @@ vec3 snell(int index, inout vec3 dest, vec3 v){
         float t1 = -b + sqrt(d);
         float t2 = -b - sqrt(d);
         t = max(t1, t2);
-        // t = min(t1,t2);
-        // if (t <= 0)
-        //     t=max(t1,t2);
     }
     dest += into_sphere*t;
     sphere_norm = -normalize(dest - objects[index].xyz);
@@ -172,7 +138,7 @@ void main(){
                 normal = normalize(objects[index].xyz);
             else
                 normal = normalize(p - objects[index].xyz);
-            v = normalize(reflect(v,normal));
+            v = normalize(reflect(v,normal));//why are we reflecting after snell's law? we already got the vector we wanted
             t = intersection(index, p, v);
             p += t*v;
             
