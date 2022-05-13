@@ -49,12 +49,10 @@ float intersection(inout int index, vec3 source, vec3 v){
 
 vec3 snell(int index, inout vec3 dest, vec3 v){
     vec3 sphere_norm = normalize(dest - objects[index].xyz);
-    float theta_in = acos(dot(sphere_norm, -v));
-    float theta_out = asin(sin(theta_in) / 1.5);
-    vec3 into_sphere = (2/3*cos(theta_in) - cos(theta_out)) * sphere_norm + 2/3 * v;
+    v = refract(v, sphere_norm, 2/3);
     float t = 0;
 
-    float b = dot(into_sphere, dest);
+    float b = dot(v, dest);
     float c = dot(dest,dest)-objects[index].w*objects[index].w;
     float d = b*b-c;
     if (d>=0){
@@ -62,11 +60,10 @@ vec3 snell(int index, inout vec3 dest, vec3 v){
         float t2 = -b - sqrt(d);
         t = max(t1, t2);
     }
-    dest += into_sphere*t;
-    sphere_norm = -normalize(dest - objects[index].xyz);
-    theta_in = acos(dot(sphere_norm, -into_sphere));
-    theta_out = asin(sin(theta_in) * 1.5);
-    return (1.5*cos(theta_in)-cos(theta_out))*sphere_norm + 1.5 * into_sphere;
+    dest += v*t;
+    sphere_norm = normalize(dest - objects[index].xyz);
+    v = refract(v, sphere_norm, 1.5);
+    return v;
 }
 
 
@@ -80,7 +77,7 @@ vec3 phong(int index, vec3 source, vec3 v, float factor){
     if (objects[index].w <= 0)
         normal = normalize(objects[index].xyz);
     else
-        normal = normalize(objects[index].xyz - source);//-normalize(source - objects[index].xyz);
+        normal = normalize(objects[index].xyz - source);
     
     for(int i = 0; i<sizes.y; i++){
         if (lightsDirection[i].w < 1 ){
@@ -130,15 +127,17 @@ void main(){
     if (index >= 0){
         vec3 p = position0 + eye1.xyw + t*v;
         vec3 normal;
-        for(int i = 0;i < 5 && index < sizes.z+sizes.w-0.1f; i++){
+        for(int i = 0;i < 5 && index < sizes.z+sizes.w-0.1f && index > -1; i++){
             if (index >= 0 && index <sizes.w -0.1f){
                 v = snell(index,p,v);
             }
-            if(objects[index].w <= 0)
-                normal = normalize(objects[index].xyz);
-            else
-                normal = normalize(p - objects[index].xyz);
-            v = normalize(reflect(v,normal));
+            else{
+                if(objects[index].w <= 0)
+                    normal = normalize(objects[index].xyz);
+                else
+                    normal = normalize(p - objects[index].xyz);
+                v = normalize(reflect(v,normal));
+            }
             t = intersection(index, p, v);
             p += t*v;
             
