@@ -14,12 +14,15 @@
 			double x2, y2;
 			
 			glfwGetCursorPos(window, &x2, &y2);
+			scn->x = x2;
+			scn->y = y2;
 			rndr->UpdatePress(x2, y2);
 			if (rndr->Picking((int)x2, (int)y2))
 			{
 				rndr->UpdatePosition(x2, y2);
-				if(button == GLFW_MOUSE_BUTTON_LEFT)
+				if(button == GLFW_MOUSE_BUTTON_LEFT){
 					rndr->Pressed();
+				}
 			}
 			else
 			{
@@ -67,8 +70,14 @@
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 			{
-				
-				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_LEFT);
+				scn->pickedShape = 1;
+				float ydiff = (ypos-scn->y > 0) ? 0.05f : ((ypos-scn->y < 0) ? -0.05f : 0);
+				float xdiff = (xpos-scn->x > 0) ? 0.05f : ((xpos-scn->x < 0) ? -0.05f : 0);
+				scn->RotateInSystem(Eigen::Vector3d(1,0,0), ydiff);
+				scn->RotateInSystem(Eigen::Vector3d(0,1,0), xdiff);
+				scn->y = ypos;
+				scn->x = xpos;
+				// scn->ShapeTransformation(scn->yRotate, (xpos-scn->x)/10000, 0);
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany())
 					rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT);
@@ -154,5 +163,4 @@ void Init(Display& display, igl::opengl::glfw::imgui::ImGuiMenu *menu)
     display.AddKeyCallBack(glfw_key_callback);
     display.AddMouseCallBacks(glfw_mouse_callback, glfw_scroll_callback, glfw_cursor_position_callback);
     display.AddResizeCallBack(glfw_window_size_callback);
-    menu->init(&display);
 }

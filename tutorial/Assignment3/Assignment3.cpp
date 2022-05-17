@@ -33,7 +33,7 @@ void Assignment3::Init()
 	
 	AddTexture("textures/box0.bmp",2);
 	AddTexture("textures/cubemaps/Daylight Box_", 3);
-	AddTexture("textures/grass.bmp", 2);
+	AddTexture("textures/plane.png", 2);
 	//AddTexture("../res/textures/Cat_bump.jpg", 2);
 
 	AddMaterial(texIDs,slots, 1);
@@ -41,41 +41,100 @@ void Assignment3::Init()
 	AddMaterial(texIDs + 2, slots + 2, 1);
 	
 	AddShape(Cube, -2, TRIANGLES);
-	AddShape(Tethrahedron, -1, TRIANGLES);
-	
-	AddShape(Octahedron, -1, TRIANGLES);
-	AddShape(Octahedron, 2, LINE_LOOP);
-    AddShape(Tethrahedron, 1, LINE_LOOP);
-
-//    AddShape(Cube, -1, TRIANGLES);
-	AddShapeFromFile("data/sphere.obj", -1, TRIANGLES);
-	//AddShapeFromFile("../res/objs/Cat_v1.obj", -1, TRIANGLES);
-	AddShape(Plane, -2, TRIANGLES,3);
-
+	AddShape(Cube, -1, TRIANGLES);
 	SetShapeShader(1, 2);
-	SetShapeShader(2, 2);
-	SetShapeShader(5, 2);
-	SetShapeShader(6, 3);
-	SetShapeMaterial(1, 0);
+	SetShapeMaterial(1, 2);
+
 	SetShapeMaterial(0, 1);
-	SetShapeMaterial(2, 2);
-	SetShapeMaterial(5, 2);
-	SetShapeMaterial(6, 0);
+	for (int i = 2; i < 28; i++){
+		AddShape(Cube, 1, TRIANGLES);
+		SetShapeShader(i, 2);
+		SetShapeMaterial(i, 2);
+	}
+	
+	
 	pickedShape = 0;
 	float s = 60;
 	ShapeTransformation(scaleAll, s,0);
-	pickedShape = 1;
-	ShapeTransformation(xTranslate, 10,0);
-
+	pickedShape = 27;
+	ShapeTransformation(xTranslate, 1,0);
+	pickedShape = 2;
+	ShapeTransformation(xTranslate, -1,0);
+	pickedShape = 3;
+	ShapeTransformation(xTranslate, 1,0);
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 4;
+	ShapeTransformation(xTranslate, -1,0);
+	ShapeTransformation(zTranslate, 1,0);
 	pickedShape = 5;
-	ShapeTransformation(xTranslate, -10,0);
+	ShapeTransformation(xTranslate, 1,0);
+	ShapeTransformation(zTranslate, -1,0);
 	pickedShape = 6;
-	ShapeTransformation(zTranslate, -1.1,0);
-	pickedShape = -1;
-	SetShapeStatic(0);
-	SetShapeStatic(6);
+	ShapeTransformation(xTranslate, -1,0);
+	ShapeTransformation(zTranslate, -1,0);
+	pickedShape = 7;
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 8;
+	ShapeTransformation(zTranslate, -1,0);
 
-	//SetShapeViewport(6, 1);
+	for(int i = 9; i < 18;i++){
+		pickedShape = i;
+		ShapeTransformation(yTranslate, 1,0);
+	}
+	pickedShape = 9;
+	ShapeTransformation(xTranslate, 1,0);
+	pickedShape = 10;
+	ShapeTransformation(xTranslate, -1,0);
+	pickedShape = 11;
+	ShapeTransformation(xTranslate, 1,0);
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 12;
+	ShapeTransformation(xTranslate, -1,0);
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 13;
+	ShapeTransformation(xTranslate, 1,0);
+	ShapeTransformation(zTranslate, -1,0);
+	pickedShape = 14;
+	ShapeTransformation(xTranslate, -1,0);
+	ShapeTransformation(zTranslate, -1,0);
+	pickedShape = 15;
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 16;
+	ShapeTransformation(zTranslate, -1,0);
+
+	pickedShape = 18;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(xTranslate, 1,0);
+	pickedShape = 19;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(xTranslate, -1,0);
+	pickedShape = 20;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(xTranslate, 1,0);
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 21;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(xTranslate, -1,0);
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 22;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(xTranslate, 1,0);
+	ShapeTransformation(zTranslate, -1,0);
+	pickedShape = 23;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(xTranslate, -1,0);
+	ShapeTransformation(zTranslate, -1,0);
+	pickedShape = 24;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(zTranslate, 1,0);
+	pickedShape = 25;
+	ShapeTransformation(yTranslate, -1,0);
+	ShapeTransformation(zTranslate, -1,0);
+	pickedShape = 26;
+	ShapeTransformation(yTranslate, -1,0);
+	pickedShape = -1;
+
+	SetShapeStatic(0);
 //	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
 
@@ -106,7 +165,7 @@ void Assignment3::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& Vie
 	
 
 	//s->SetUniform1i("sampler2", materials[shapes[pickedShape]->GetMaterial()]->GetSlot(1));
-	//s->SetUniform4f("lightDirection", 0.0f , 0.0f, -1.0f, 0.0f);
+	s->SetUniform4f("lightDirection", 0.0f , 0.0f, -1.0f, 0.0f);
 //	if(shaderIndx == 0)
 //		s->SetUniform4f("lightColor",r/255.0f, g/255.0f, b/255.0f,1.0f);
 //	else 
