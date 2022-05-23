@@ -114,11 +114,31 @@
 				break;
 
 			case GLFW_KEY_UP:
-				rndr->MoveCamera(0, scn->xRotate, 0.05f);
-				
+				// int k = 5;
+				for(int i = 0; i< 9; i++){
+					if(i == 0)
+						scn->pickedShape = 13;
+					if(i == 1)
+						scn->pickedShape = 5;
+					if(i == 2)
+						scn->pickedShape = 22;
+					if(i == 3)
+						scn->pickedShape = 25;
+					if(i == 4)
+						scn->pickedShape = 23;
+					if(i == 5)
+						scn->pickedShape = 6;
+					if(i == 6)
+						scn->pickedShape = 14;
+					if(i == 7)
+						scn->pickedShape = 16;
+					if(i == 8)
+						scn->pickedShape = 8;		
+					scn->ShapeTransformation(scn->zRotate, EIGEN_PI/4, 0);		
+				}		
 				break;
 			case GLFW_KEY_DOWN:
-				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
+				// scn->shapeTransformation(scn->xGlobalRotate,-5.f);
 				//cout<< "down: "<<endl;
 				rndr->MoveCamera(0, scn->xRotate, -0.05f);
 				break;
