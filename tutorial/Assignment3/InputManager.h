@@ -97,6 +97,7 @@
 	{
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Assignment3* scn = (Assignment3*)rndr->GetScene();
+		std::vector<int> indexes;
 		//rndr->FreeShapes(2);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
@@ -161,14 +162,34 @@
 				break;
 			
 			case GLFW_KEY_R:
-				rndr->MoveCamera(0, scn->xTranslate, 0.25f);
+				indexes = scn->cube->getIndexes(2);
+				for (int i = 0; i<9; i++){
+					scn->pickedShape = indexes[i];
+					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
+				}
+				scn->cube->rightCW();
+				scn->cube->printcube();
 				break;
 			
 			case GLFW_KEY_B:
 				rndr->MoveCamera(0, scn->zTranslate, 0.5f);
 				break;
 			case GLFW_KEY_F:
-				rndr->MoveCamera(0, scn->zTranslate, -0.5f);
+				indexes = scn->cube->getIndexes(0);
+				for (int i = 0; i<9; i++){
+					scn->pickedShape = indexes[i];
+					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
+					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
+				}
+				scn->cube->frontCW();
+				scn->cube->printcube();
 				break;
 			default:
 				break;

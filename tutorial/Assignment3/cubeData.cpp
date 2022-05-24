@@ -17,10 +17,40 @@ cubeData::cubeData ()
 void cubeData :: printcube(){
     // inPlaceRotate(1,2);
     for (int i = 0; i<27; i++){
-            std::cout << indexes[i]<< std::endl;    
-        
-        
+            std::cout << indexes[i] << "  ";    
+            if (indexes[i]<10)
+                std::cout << " ";
     }   
+    std::cout << std::endl;
+}
+
+std::vector<int> cubeData :: getIndexes(int face)
+{
+    std::vector<int> temp;
+    switch(face){
+        case 0: 
+            temp = front;
+            break;
+        case 1:
+            temp = back;
+            break;
+        case 2:
+            temp = right;
+            break;
+        case 3:
+            temp = left;
+            break;
+        case 4:
+            temp = top;
+            break;
+        case 5:
+            temp = bottom;
+            break;
+    }
+    return {indexes[temp[0]],indexes[temp[1]],indexes[temp[2]],
+            indexes[temp[3]],indexes[temp[4]],indexes[temp[5]],
+            indexes[temp[6]],indexes[temp[7]],indexes[temp[8]]};
+
 }
 
 void cubeData::leftCW(){
@@ -73,6 +103,43 @@ void cubeData::bottomCW(){
     indexes[19] = temp2;
     indexes[11] = temp;
 }
+
+void cubeData::topCW(){
+    int temp = indexes[6];
+    indexes[6] = indexes[8];
+    int temp2 = indexes[24];
+    indexes[24] = temp;
+    temp = indexes[26];
+    indexes[26] = temp2;
+    indexes[8] = temp;
+    temp = indexes[15];
+    indexes[15] = indexes[7];
+    temp2 = indexes[25];
+    indexes[25] = temp;
+    temp = indexes[17];
+    indexes[17] = temp2;
+    indexes[7] = temp;
+}
+
+void cubeData::frontCW(){
+    int temp = indexes[8];
+    indexes[8] = indexes[2];
+    int temp2 = indexes[26];
+    indexes[26] = temp;
+    temp = indexes[20];
+    indexes[20] = temp2;
+    indexes[2] = temp;
+    temp = indexes[17];
+    indexes[17] = indexes[5];
+    temp2 = indexes[23];
+    indexes[23] = temp;
+    temp = indexes[11];
+    indexes[11] = temp2;
+    indexes[5] = temp;
+}
+
+
+
 
 void cubeData::inPlaceRotate(int face, int direction){
     std::vector<std::vector<int>> temp2;

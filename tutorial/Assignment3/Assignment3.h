@@ -8,6 +8,7 @@ class Assignment3 : public igl::opengl::glfw::Viewer
 public:
 	float x;
 	float y;
+	cubeData *cube;
 
 	Assignment3();
 //	Assignment3(float angle,float relationWH,float near, float far);

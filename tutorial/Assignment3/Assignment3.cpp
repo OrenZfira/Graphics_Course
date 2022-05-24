@@ -15,6 +15,7 @@ static void printMat(const Eigen::Matrix4d& mat)
 
 Assignment3::Assignment3()
 {
+	cube = new cubeData();
 }
 
 //Assignment3::Assignment3(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
@@ -40,7 +41,7 @@ void Assignment3::Init()
 	AddMaterial(texIDs+1, slots+1, 1);
 	AddMaterial(texIDs + 2, slots + 2, 1);
 	
-	AddShape(Cube, -2, TRIANGLES);
+	// AddShape(Cube, -2, TRIANGLES);
 	//AddShape(Cube, -1, TRIANGLES);
 	// SetShapeShader(1, 2);
 	// SetShapeMaterial(1, 2);
@@ -48,9 +49,9 @@ void Assignment3::Init()
 	SetShapeMaterial(0, 1);
 	for (int i = 0; i < 28; i++){
 		AddShape(Cube, -1, TRIANGLES);
-		SetShapeShader(i+1, 2);
-		SetShapeMaterial(i+1, 2);
-		pickedShape = i+1;
+		SetShapeShader(i, 2);
+		SetShapeMaterial(i, 2);
+		pickedShape = i;
 		if(i%3 == 0)
 			ShapeTransformation(zTranslate,-1,0);
 		if(i%3 == 2)
@@ -64,12 +65,14 @@ void Assignment3::Init()
 		if (i > 17)
 			ShapeTransformation(xTranslate,1,0);
 	}
-	pickedShape = 0;
-	float s = 60;
-	ShapeTransformation(scaleAll, s,0);
+	// pickedShape = 0;
+	// float s = 60;
+	// ShapeTransformation(scaleAll, s,0);
 	cubeData *t = new cubeData();
-	t->printcube();
-	SetShapeStatic(0);
+	// t->printcube();
+	// t->frontCW();
+	// t->printcube();
+	// SetShapeStatic(0);
 //	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
 
