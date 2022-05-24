@@ -70,7 +70,7 @@
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 			{
-				scn->pickedShape = 1;
+				// scn->pickedShape = 1;
 				float ydiff = (ypos-scn->y > 0) ? 0.05f : ((ypos-scn->y < 0) ? -0.05f : 0);
 				float xdiff = (xpos-scn->x > 0) ? 0.05f : ((xpos-scn->x < 0) ? -0.05f : 0);
 				scn->RotateInSystem(Eigen::Vector3d(1,0,0), ydiff);

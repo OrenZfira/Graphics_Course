@@ -41,99 +41,34 @@ void Assignment3::Init()
 	AddMaterial(texIDs + 2, slots + 2, 1);
 	
 	AddShape(Cube, -2, TRIANGLES);
-	AddShape(Cube, -1, TRIANGLES);
-	SetShapeShader(1, 2);
-	SetShapeMaterial(1, 2);
+	//AddShape(Cube, -1, TRIANGLES);
+	// SetShapeShader(1, 2);
+	// SetShapeMaterial(1, 2);
 
 	SetShapeMaterial(0, 1);
-	for (int i = 2; i < 28; i++){
-		AddShape(Cube, 1, TRIANGLES);
-		SetShapeShader(i, 2);
-		SetShapeMaterial(i, 2);
+	for (int i = 0; i < 28; i++){
+		AddShape(Cube, -1, TRIANGLES);
+		SetShapeShader(i+1, 2);
+		SetShapeMaterial(i+1, 2);
+		pickedShape = i+1;
+		if(i%3 == 0)
+			ShapeTransformation(zTranslate,-1,0);
+		if(i%3 == 2)
+			ShapeTransformation(zTranslate,1,0);
+		if (i%9 <= 2)
+			ShapeTransformation(yTranslate,-1,0);
+		if(i%9 > 5)
+			ShapeTransformation(yTranslate,1,0);
+		if ( i <= 8)
+			ShapeTransformation(xTranslate,-1,0);
+		if (i > 17)
+			ShapeTransformation(xTranslate,1,0);
 	}
-	
-	
 	pickedShape = 0;
 	float s = 60;
 	ShapeTransformation(scaleAll, s,0);
-	pickedShape = 27;
-	ShapeTransformation(xTranslate, 1,0);
-	pickedShape = 2;
-	ShapeTransformation(xTranslate, -1,0);
-	pickedShape = 3;
-	ShapeTransformation(xTranslate, 1,0);
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 4;
-	ShapeTransformation(xTranslate, -1,0);
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 5;
-	ShapeTransformation(xTranslate, 1,0);
-	ShapeTransformation(zTranslate, -1,0);
-	pickedShape = 6;
-	ShapeTransformation(xTranslate, -1,0);
-	ShapeTransformation(zTranslate, -1,0);
-	pickedShape = 7;
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 8;
-	ShapeTransformation(zTranslate, -1,0);
-
-	for(int i = 9; i < 18;i++){
-		pickedShape = i;
-		ShapeTransformation(yTranslate, 1,0);
-	}
-	pickedShape = 9;
-	ShapeTransformation(xTranslate, 1,0);
-	pickedShape = 10;
-	ShapeTransformation(xTranslate, -1,0);
-	pickedShape = 11;
-	ShapeTransformation(xTranslate, 1,0);
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 12;
-	ShapeTransformation(xTranslate, -1,0);
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 13;
-	ShapeTransformation(xTranslate, 1,0);
-	ShapeTransformation(zTranslate, -1,0);
-	pickedShape = 14;
-	ShapeTransformation(xTranslate, -1,0);
-	ShapeTransformation(zTranslate, -1,0);
-	pickedShape = 15;
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 16;
-	ShapeTransformation(zTranslate, -1,0);
-
-	pickedShape = 18;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(xTranslate, 1,0);
-	pickedShape = 19;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(xTranslate, -1,0);
-	pickedShape = 20;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(xTranslate, 1,0);
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 21;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(xTranslate, -1,0);
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 22;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(xTranslate, 1,0);
-	ShapeTransformation(zTranslate, -1,0);
-	pickedShape = 23;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(xTranslate, -1,0);
-	ShapeTransformation(zTranslate, -1,0);
-	pickedShape = 24;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(zTranslate, 1,0);
-	pickedShape = 25;
-	ShapeTransformation(yTranslate, -1,0);
-	ShapeTransformation(zTranslate, -1,0);
-	pickedShape = 26;
-	ShapeTransformation(yTranslate, -1,0);
-	pickedShape = -1;
-
+	cubeData *t = new cubeData();
+	t->printcube();
 	SetShapeStatic(0);
 //	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
