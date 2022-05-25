@@ -16,6 +16,9 @@ static void printMat(const Eigen::Matrix4d& mat)
 Assignment3::Assignment3()
 {
 	cube = new cubeData();
+	speed = 40;
+	counter = 0;
+	direction = 1;//clockwise
 }
 
 //Assignment3::Assignment3(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
@@ -121,7 +124,55 @@ void Assignment3::WhenTranslate()
 }
 
 void Assignment3::Animate() {
-    if(isActive)
+    if(!actions.empty()){
+		std::pair<int, int> p = actions.front();
+		if(p.first == 6){//switch direction
+			actions.pop();
+			return;
+		}
+		if(p.first == 7){//change speed
+			actions.pop();
+			return;
+		}
+		
+		counter++;
+		std::vector<int> indexes = cube->getIndexes(p.first);
+		for (int i = 0; i<9; i++){
+			pickedShape = indexes[i];
+			switch(p.first){
+				case 0:
+					std::cout << "got 0" << std ::endl;
+					ShapeTransformation(zRotate, p.second*-EIGEN_PI/(2*speed), 1);
+					break;
+				case 1:
+					std::cout << "got 1" << std ::endl;
+					ShapeTransformation(zRotate, p.second*EIGEN_PI/(2*speed), 1);
+					break;
+				case 2:
+					std::cout << "got 2" << std ::endl;
+					ShapeTransformation(xRotate, p.second*-EIGEN_PI/(2*speed), 1);
+					break;
+				case 3:
+					std::cout << "got 3" << std ::endl;
+					ShapeTransformation(xRotate, p.second*EIGEN_PI/(2*speed), 1);
+					break;
+				case 4:
+					std::cout << "got 4" << std ::endl;	
+					ShapeTransformation(yRotate, p.second*-EIGEN_PI/(2*speed), 1);
+					break;
+				case 5:
+					std::cout << "got 5" << std ::endl;
+					ShapeTransformation(yRotate, p.second*EIGEN_PI/(2*speed), 1);
+					break;
+			}
+		}
+		
+		if ( counter == speed){
+			actions.pop();
+			counter = 0;
+			cube->rotate(p.first, p.second);
+		}
+	}
 	{
 		
 	}

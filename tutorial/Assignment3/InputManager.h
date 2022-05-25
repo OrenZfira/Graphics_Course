@@ -152,44 +152,22 @@
 				rndr->MoveCamera(0, scn->yRotate, -0.05f);
 				break;
 			case GLFW_KEY_U:
-				rndr->MoveCamera(0, scn->yTranslate, 0.25f);
+				scn->actions.push({4, scn->direction});
 				break;
 			case GLFW_KEY_D:
-				rndr->MoveCamera(0, scn->yTranslate, -0.25f);
+				scn->actions.push({5, scn->direction});
 				break;
 			case GLFW_KEY_L:
-				rndr->MoveCamera(0, scn->xTranslate, -0.25f);
+				scn->actions.push({3,scn->direction});
 				break;
-			
 			case GLFW_KEY_R:
-				indexes = scn->cube->getIndexes(2);
-				for (int i = 0; i<9; i++){
-					scn->pickedShape = indexes[i];
-					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->xRotate, -EIGEN_PI/10, 0);
-				}
-				scn->cube->rightCW();
-				scn->cube->printcube();
+				scn->actions.push({2, scn->direction});
 				break;
-			
 			case GLFW_KEY_B:
-				rndr->MoveCamera(0, scn->zTranslate, 0.5f);
+				scn->actions.push({1, scn->direction});
 				break;
 			case GLFW_KEY_F:
-				indexes = scn->cube->getIndexes(0);
-				for (int i = 0; i<9; i++){
-					scn->pickedShape = indexes[i];
-					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
-					scn->ShapeTransformation(scn->zRotate, -EIGEN_PI/10, 0);
-				}
-				scn->cube->frontCW();
-				scn->cube->printcube();
+				scn->actions.push({0, scn->direction});
 				break;
 			default:
 				break;

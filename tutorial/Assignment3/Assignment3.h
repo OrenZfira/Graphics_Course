@@ -1,6 +1,7 @@
 #pragma once
 #include "igl/opengl/glfw/Viewer.h"
 #include "cubeData.h"
+#include <queue>
 
 class Assignment3 : public igl::opengl::glfw::Viewer
 {
@@ -9,6 +10,10 @@ public:
 	float x;
 	float y;
 	cubeData *cube;
+	std::queue<std::pair<int,int>> actions;
+	int direction;
+	int speed;
+	int counter;
 
 	Assignment3();
 //	Assignment3(float angle,float relationWH,float near, float far);

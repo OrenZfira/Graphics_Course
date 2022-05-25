@@ -53,7 +53,66 @@ std::vector<int> cubeData :: getIndexes(int face)
 
 }
 
-void cubeData::leftCW(){
+void cubeData::frontR(int direction){
+    if(direction == 1)
+        frontCW();
+    else
+        frontCCW();
+}
+
+void cubeData::backR(int direction){
+    if (direction == 1)
+        backCW();
+    else
+        backCCW();
+}
+
+void cubeData::topR(int direction){
+    if (direction == 1)
+        topCW();
+    else
+        topCCW();
+}
+
+void cubeData::bottomR(int direction){
+    if(direction == 1)
+        bottomCW();
+    else
+        bottomCCW();
+}
+
+void cubeData::leftR(int direction){
+    if (direction == 1)
+        leftCW();
+    else
+        leftCCW();
+}
+
+void cubeData::rightR(int direction){
+    if(direction == 1)
+        rightCW();
+    else
+        rightCCW();
+}
+
+void cubeData::rotate(int face, int direction){
+    switch(face){
+        case 0:
+            frontR(direction);
+        case 1:
+            backR(direction);
+        case 2:
+            rightR(direction);
+        case 3:
+            leftR(direction);
+        case 4: 
+            topR(direction);
+        case 5:
+            bottomR(direction);
+    }
+}
+
+void cubeData::leftCCW(){
     int temp = indexes[2];
     indexes[2] = indexes[0];
     int temp2 = indexes[8];
@@ -70,7 +129,24 @@ void cubeData::leftCW(){
     indexes[1] = temp;
 }
 
-void cubeData::rightCW(){
+void cubeData::leftCW(){
+    int temp = indexes[2];
+    indexes[2] = indexes[8];
+    int temp2 = indexes[0];
+    indexes[0] = temp;
+    temp = indexes[6];
+    indexes[6] = temp2;
+    indexes[8] = temp;
+    temp = indexes[5];
+    indexes[5] = indexes[7];
+    temp2 = indexes[1];
+    indexes[1] = temp;
+    temp = indexes[3];
+    indexes[3] = temp2;
+    indexes[7] = temp;
+}
+
+void cubeData::rightCCW(){
     int temp = indexes[24];
     indexes[24] = indexes[18];
     int temp2 = indexes[26];
@@ -87,7 +163,41 @@ void cubeData::rightCW(){
     indexes[21] = temp;
 }
 
+void cubeData::rightCW(){
+    int temp = indexes[24];
+    indexes[24] = indexes[26];
+    int temp2 = indexes[18];
+    indexes[18] = temp;
+    temp = indexes[20];
+    indexes[20] = temp2;
+    indexes[26] = temp;
+    temp = indexes[25];
+    indexes[25] = indexes[23];
+    temp2 = indexes[21];
+    indexes[21] = temp;
+    temp = indexes[19];
+    indexes[19] = temp2;
+    indexes[23] = temp;
+}
+
 void cubeData::bottomCW(){
+    int temp = indexes[0];
+    indexes[0] = indexes[18];
+    int temp2 = indexes[2];
+    indexes[2] = temp;
+    temp = indexes[20];
+    indexes[20] = temp2;
+    indexes[18] = temp;
+    temp = indexes[1];
+    indexes[1] = indexes[9];
+    temp2 = indexes[11];
+    indexes[11] = temp;
+    temp = indexes[19];
+    indexes[19] = temp2;
+    indexes[9] = temp;
+}
+
+void cubeData::bottomCCW(){
     int temp = indexes[0];
     indexes[0] = indexes[2];
     int temp2 = indexes[18];
@@ -121,6 +231,24 @@ void cubeData::topCW(){
     indexes[7] = temp;
 }
 
+void cubeData::topCCW(){
+    int temp = indexes[6];
+    indexes[6] = indexes[24];
+    int temp2 = indexes[8];
+    indexes[8] = temp;
+    temp = indexes[26];
+    indexes[26] = temp2;
+    indexes[24] = temp;
+    temp = indexes[15];
+    indexes[15] = indexes[25];
+    temp2 = indexes[17];
+    indexes[7] = temp;
+    temp = indexes[7];
+    indexes[25] = temp2;
+    indexes[17] = temp;
+}
+
+
 void cubeData::frontCW(){
     int temp = indexes[8];
     indexes[8] = indexes[2];
@@ -138,66 +266,53 @@ void cubeData::frontCW(){
     indexes[5] = temp;
 }
 
+void cubeData::frontCCW(){
+    int temp = indexes[8];
+    indexes[8] = indexes[26];
+    int temp2 = indexes[2];
+    indexes[2] = temp;
+    temp = indexes[20];
+    indexes[20] = temp2;
+    indexes[26] = temp;
+    temp = indexes[17];
+    indexes[17] = indexes[23];
+    temp2 = indexes[5];
+    indexes[5] = temp;
+    temp = indexes[11];
+    indexes[11] = temp2;
+    indexes[23] = temp;
+}
 
+void cubeData:: backCW(){
+    int temp = indexes[18];
+    indexes[18] = indexes[0];
+    int temp2 = indexes[24];
+    indexes[24] = temp;
+    temp = indexes[6];
+    indexes[6] = temp2;
+    indexes[0] = temp;
+    temp = indexes[21];
+    indexes[21] = indexes[9];
+    temp2 = indexes[15];
+    indexes[15] = temp;
+    temp = indexes[3];
+    indexes[3] = temp2;
+    indexes[9] = temp;
+}
 
-
-void cubeData::inPlaceRotate(int face, int direction){
-    std::vector<std::vector<int>> temp2;
-    std::vector<std::vector<int>> temp = {{0,0,0}, 
-                                        {0, 0, 0 }, 
-                                        {0,0,0}};
-    // switch(face){
-    //     case 0: 
-    //         temp2 = front;
-    //         break;
-    //     case 1:
-    //         temp2 = back;
-    //         break;
-    //     case 2:
-    //         temp2 = right;
-    //         break;
-    //     case 3:
-    //         temp2 = left;
-    //         break;
-    //     case 4:
-    //         temp2 = top;
-    //         break;
-    //     case 5:
-    //         temp2 = bottom;
-    //         break;
-    // }
-    if(direction){
-        for (int i = 0; i< 3; i++){//counter clockwise rotate
-            for (int j = 0; j< 3; j++){
-                temp[i][j] = temp2[j][2-i];
-            }
-        }
-    }
-    else{
-        for (int i = 0; i< 3; i++){// clockwise rotate
-            for (int j = 0; j< 3; j++){
-                temp[i][j] = temp2[2-j][i];
-            }
-        }
-    }
-    // switch(face){
-    //     case 0: 
-    //         front = temp;
-    //         break;
-    //     case 1:
-    //         back = temp;
-    //         break;
-    //     case 2:
-    //         right = temp; 
-    //         break;
-    //     case 3:
-    //         left = temp;
-    //         break;
-    //     case 4:
-    //         top = temp;
-    //         break;
-    //     case 5:
-    //         bottom = temp;
-    //         break;
-    // }
+void cubeData:: backCCW(){
+    int temp = indexes[0];
+    indexes[0] = indexes[18];
+    int temp2 = indexes[6];
+    indexes[6] = temp;
+    temp = indexes[24];
+    indexes[24] = temp2;
+    indexes[18] = temp;
+    temp = indexes[3];
+    indexes[3] = indexes[9];
+    temp2 = indexes[15];
+    indexes[15] = temp;
+    temp = indexes[21];
+    indexes[21] = temp2;
+    indexes[9] = temp;
 }
