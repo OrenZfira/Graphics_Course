@@ -99,16 +99,22 @@ void cubeData::rotate(int face, int direction){
     switch(face){
         case 0:
             frontR(direction);
+            break;
         case 1:
             backR(direction);
+            break;
         case 2:
             rightR(direction);
+            break;
         case 3:
             leftR(direction);
+            break;
         case 4: 
             topR(direction);
+            break;
         case 5:
             bottomR(direction);
+            break;
     }
 }
 

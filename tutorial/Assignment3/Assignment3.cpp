@@ -50,7 +50,7 @@ void Assignment3::Init()
 	// SetShapeMaterial(1, 2);
 
 	SetShapeMaterial(0, 1);
-	for (int i = 0; i < 28; i++){
+	for (int i = 0; i < 27; i++){
 		AddShape(Cube, -1, TRIANGLES);
 		SetShapeShader(i, 2);
 		SetShapeMaterial(i, 2);
@@ -141,27 +141,21 @@ void Assignment3::Animate() {
 			pickedShape = indexes[i];
 			switch(p.first){
 				case 0:
-					std::cout << "got 0" << std ::endl;
 					ShapeTransformation(zRotate, p.second*-EIGEN_PI/(2*speed), 1);
 					break;
 				case 1:
-					std::cout << "got 1" << std ::endl;
 					ShapeTransformation(zRotate, p.second*EIGEN_PI/(2*speed), 1);
 					break;
 				case 2:
-					std::cout << "got 2" << std ::endl;
 					ShapeTransformation(xRotate, p.second*-EIGEN_PI/(2*speed), 1);
 					break;
 				case 3:
-					std::cout << "got 3" << std ::endl;
 					ShapeTransformation(xRotate, p.second*EIGEN_PI/(2*speed), 1);
 					break;
 				case 4:
-					std::cout << "got 4" << std ::endl;	
 					ShapeTransformation(yRotate, p.second*-EIGEN_PI/(2*speed), 1);
 					break;
 				case 5:
-					std::cout << "got 5" << std ::endl;
 					ShapeTransformation(yRotate, p.second*EIGEN_PI/(2*speed), 1);
 					break;
 			}
@@ -171,7 +165,7 @@ void Assignment3::Animate() {
 			actions.pop();
 			counter = 0;
 			cube->rotate(p.first, p.second);
-		}
+		}	
 	}
 	{
 		
