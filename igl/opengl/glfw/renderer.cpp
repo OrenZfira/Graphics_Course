@@ -310,8 +310,19 @@ bool Renderer::Picking(int x, int y)
 
     Eigen::Vector4d pos;
 
-    unsigned char data[4];
-    //glGetIntegerv(GL_VIEWPORT, viewport); //reading viewport parameters
+    unsigned char data[3];
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_LIGHTING);
+    Eigen::Matrix4f Proj = cameras[0]->GetViewProjection().cast<float>();
+    Eigen::Matrix4f View = cameras[0]->MakeTransScaled().inverse().cast<float>();
+    scn->Draw(0, Proj, View, 0, 65536,1);
+    glFlush();
+    glFinish();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
+    int error = glGetError();
+    std::cout << "x: " << x << " y: "<< y << std::endl;
+    std::cout << int(data[0]) << " " << int(data[1]) << " "<< unsigned int(data[2]) << " "<<unsigned int(data[3]) << std::endl;
     int i = 0;
     isPicked =  scn->Picking(data,i);
     return isPicked;

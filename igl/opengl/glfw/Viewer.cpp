@@ -410,7 +410,6 @@ IGL_INLINE bool
             auto shape = data_list[i];
             if (shape->Is2Render(viewportIndx))
             {
-
                 Eigen::Matrix4f Model = shape->MakeTransScale();
 
                 if (!shape->IsStatic())
@@ -685,10 +684,16 @@ IGL_INLINE bool
 
     }
 
-    bool Viewer::Picking(unsigned char data[4], int newViewportIndx)
+    bool Viewer::Picking(unsigned char data[3], int newViewportIndx)
     {
-
-        return false;
+        int pickedID = 
+	    data[0] + 
+	    data[1] * 256 +
+	    data[2] * 256*256;
+        if (pickedID == 0x00ffffff)
+            return false; // Full white, must be the background !
+        pickedShape = pickedID;
+        return true;
 
     }
 

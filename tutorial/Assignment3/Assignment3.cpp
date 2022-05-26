@@ -30,10 +30,10 @@ void Assignment3::Init()
 	unsigned int texIDs[3] = { 0 , 1, 2};
 	unsigned int slots[3] = { 0 , 1, 2 };
 	
-	AddShader("shaders/pickingShader");
+	AddShader("shaders/pickingShader2");
 	AddShader("shaders/cubemapShader");
 	AddShader("shaders/basicShader");
-	AddShader("shaders/pickingShader");
+	AddShader("shaders/pickingShader2");
 	
 	AddTexture("textures/box0.bmp",2);
 	AddTexture("textures/cubemaps/Daylight Box_", 3);
@@ -68,7 +68,7 @@ void Assignment3::Init()
 		if (i > 17)
 			ShapeTransformation(xTranslate,1,0);
 	}
-	// pickedShape = 0;
+	pickedShape = -1;
 	// float s = 60;
 	// ShapeTransformation(scaleAll, s,0);
 	cubeData *t = new cubeData();
@@ -82,9 +82,9 @@ void Assignment3::Init()
 void Assignment3::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)
 {
 	Shader *s = shaders[shaderIndx];
-	int r = ((shapeIndx+1) & 0x000000FF) >>  0;
-	int g = ((shapeIndx+1) & 0x0000FF00) >>  8;
-	int b = ((shapeIndx+1) & 0x00FF0000) >> 16;
+	int r = ((shapeIndx) & 0x000000FF) >>  0;
+	int g = ((shapeIndx) & 0x0000FF00) >>  8;
+	int b = ((shapeIndx) & 0x00FF0000) >> 16;
 
 
 		s->Bind();
@@ -99,7 +99,7 @@ void Assignment3::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& Vie
 	if (shaderIndx == 0)
 		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 0.0f);
 	else
-		s->SetUniform4f("lightColor", 4/100.0f, 60 / 100.0f, 99 / 100.0f, 0.5f);
+		s->SetUniform4f("lightColor", r/255.0f, g / 255.0f, b / 255.0f, 1.0f);
 	//textures[0]->Bind(0);
 
 	
@@ -182,6 +182,7 @@ void Assignment3::ScaleAllShapes(float amt,int viewportIndx)
 		}
 	}
 }
+
 
 Assignment3::~Assignment3(void)
 {
