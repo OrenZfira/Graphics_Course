@@ -19,9 +19,7 @@
 			rndr->UpdatePress(x2, y2);
 			if (button == GLFW_MOUSE_BUTTON_RIGHT && rndr->Picking((int)x2, (int)y2))
 			{
-				// std::cout<< scn->pickedShape << std::endl;
-				scn->actions.push({scn->pickedShape, scn->direction});
-				// scn->ShapeTransformation(scn->xTranslate, 3, 0);
+				scn->actions.push(scn->pickedShape);
 				rndr->UpdatePosition(x2, y2);
 				if(button == GLFW_MOUSE_BUTTON_LEFT){
 					rndr->Pressed();
@@ -73,14 +71,12 @@
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 			{
-				// scn->pickedShape = 1;
 				float ydiff = (ypos-scn->y > 0) ? 0.05f : ((ypos-scn->y < 0) ? -0.05f : 0);
 				float xdiff = (xpos-scn->x > 0) ? 0.05f : ((xpos-scn->x < 0) ? -0.05f : 0);
 				scn->RotateInSystem(Eigen::Vector3d(1,0,0), ydiff);
 				scn->RotateInSystem(Eigen::Vector3d(0,1,0), xdiff);
 				scn->y = ypos;
 				scn->x = xpos;
-				// scn->ShapeTransformation(scn->yRotate, (xpos-scn->x)/10000, 0);
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany())
 					rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT);
@@ -101,7 +97,6 @@
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Assignment3* scn = (Assignment3*)rndr->GetScene();
 		std::vector<int> indexes;
-		//rndr->FreeShapes(2);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
 			switch (key)
@@ -111,10 +106,7 @@
 				break;
 				
 			case GLFW_KEY_SPACE:
-				if (scn->IsActive())
-					scn->Deactivate();
-				else
-					scn->Activate();
+				scn->actions.push(6);
 				break;
 
 			case GLFW_KEY_UP:
@@ -134,22 +126,28 @@
 				rndr->MoveCamera(0, scn->yRotate, -0.05f);
 				break;
 			case GLFW_KEY_U:
-				scn->actions.push({4, scn->direction});
+				scn->actions.push(4);
 				break;
 			case GLFW_KEY_D:
-				scn->actions.push({5, scn->direction});
+				scn->actions.push(5);
 				break;
 			case GLFW_KEY_L:
-				scn->actions.push({3,scn->direction});
+				scn->actions.push(3);
 				break;
 			case GLFW_KEY_R:
-				scn->actions.push({2, scn->direction});
+				scn->actions.push(2);
 				break;
 			case GLFW_KEY_B:
-				scn->actions.push({1, scn->direction});
+				scn->actions.push(1);
 				break;
 			case GLFW_KEY_F:
-				scn->actions.push({0, scn->direction});
+				scn->actions.push(0);
+				break;
+			case GLFW_KEY_A:
+				scn->actions.push(7);
+				break;
+			case GLFW_KEY_Z:
+				scn->actions.push(8);
 				break;
 			default:
 				break;

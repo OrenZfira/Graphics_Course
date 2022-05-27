@@ -10,7 +10,7 @@ public:
 	float x;
 	float y;
 	cubeData *cube;
-	std::queue<std::pair<int,int>> actions;
+	std::queue<int> actions;
 	int direction;
 	int speed;
 	int counter;

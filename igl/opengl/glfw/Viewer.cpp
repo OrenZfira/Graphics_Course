@@ -689,12 +689,12 @@ IGL_INLINE bool
         int pickedID;
         for(int i = 0; i <  3; i++){
             if(int(data[i]))
-                pickedID = data[i] - 1;
+                pickedID = data[i];
         }
-        if (pickedID == 0x000000fe)
+        if (pickedID == 0x000000ff)
             return false; // Full white, must be the background !
-        pickedShape = pickedID;
-        std::cout<< "picked shape: " << pickedShape << std::endl;
+        // pickedShape = pickedID;
+        // std::cout<< "picked shape: " << pickedShape << std::endl;
         return true;
 
     }

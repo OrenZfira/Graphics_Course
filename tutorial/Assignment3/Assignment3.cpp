@@ -16,7 +16,7 @@ static void printMat(const Eigen::Matrix4d& mat)
 Assignment3::Assignment3()
 {
 	cube = new cubeData();
-	speed = 40;
+	speed = 32;
 	counter = 0;
 	direction = 1;//clockwise
 }
@@ -69,13 +69,6 @@ void Assignment3::Init()
 			ShapeTransformation(xTranslate,1,0);
 	}
 	pickedShape = -1;
-	// float s = 60;
-	// ShapeTransformation(scaleAll, s,0);
-	cubeData *t = new cubeData();
-	// t->printcube();
-	// t->frontCW();
-	// t->printcube();
-	// SetShapeStatic(0);
 //	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
 
@@ -97,7 +90,7 @@ void Assignment3::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& Vie
 		BindMaterial(s, data_list[shapeIndx]->GetMaterial());
 	}
 	if (shaderIndx == 0)
-		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 0.0f);
+		s->SetUniform4f("lightColor", 1 / 255.0f, 1 / 255.0f, 1 / 255.0f, 0.0f);
 	else
 		s->SetUniform4f("lightColor", r/255.0f, g / 255.0f, b / 255.0f, 1.0f);
 	//textures[0]->Bind(0);
@@ -125,38 +118,47 @@ void Assignment3::WhenTranslate()
 
 void Assignment3::Animate() {
     if(!actions.empty()){
-		std::pair<int, int> p = actions.front();
-		if(p.first == 6){//switch direction
+		int p = actions.front();
+		if(p == 6){//switch direction
 			actions.pop();
+			direction *= -1;
 			return;
 		}
-		if(p.first == 7){//change speed
+		if(p == 7){//slower rotation
 			actions.pop();
+			if(speed != 512)
+				speed *=2;
+			return;
+		}
+		if(p==8){//faster rotation
+			actions.pop();
+			if (speed > 1)
+				speed /= 2;
 			return;
 		}
 		
 		counter++;
-		std::vector<int> indexes = cube->getIndexes(p.first);
+		std::vector<int> indexes = cube->getIndexes(p);
 		for (int i = 0; i<9; i++){
 			pickedShape = indexes[i];
-			switch(p.first){
+			switch(p){
 				case 0:
-					ShapeTransformation(zRotate, p.second*-EIGEN_PI/(2*speed), 1);
+					ShapeTransformation(zRotate, direction*-EIGEN_PI/(2*speed), 1);
 					break;
 				case 1:
-					ShapeTransformation(zRotate, p.second*EIGEN_PI/(2*speed), 1);
+					ShapeTransformation(zRotate, direction*EIGEN_PI/(2*speed), 1);
 					break;
 				case 2:
-					ShapeTransformation(xRotate, p.second*-EIGEN_PI/(2*speed), 1);
+					ShapeTransformation(xRotate, direction*-EIGEN_PI/(2*speed), 1);
 					break;
 				case 3:
-					ShapeTransformation(xRotate, p.second*EIGEN_PI/(2*speed), 1);
+					ShapeTransformation(xRotate, direction*EIGEN_PI/(2*speed), 1);
 					break;
 				case 4:
-					ShapeTransformation(yRotate, p.second*-EIGEN_PI/(2*speed), 1);
+					ShapeTransformation(yRotate, direction*-EIGEN_PI/(2*speed), 1);
 					break;
 				case 5:
-					ShapeTransformation(yRotate, p.second*EIGEN_PI/(2*speed), 1);
+					ShapeTransformation(yRotate, direction*EIGEN_PI/(2*speed), 1);
 					break;
 			}
 		}
@@ -164,11 +166,8 @@ void Assignment3::Animate() {
 		if ( counter == speed){
 			actions.pop();
 			counter = 0;
-			cube->rotate(p.first, p.second);
+			cube->rotate(p, direction);
 		}	
-	}
-	{
-		
 	}
 }
 
