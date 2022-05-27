@@ -82,9 +82,9 @@ void Assignment3::Init()
 void Assignment3::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)
 {
 	Shader *s = shaders[shaderIndx];
-	int r = ((shapeIndx) & 0x000000FF) >>  0;
-	int g = ((shapeIndx) & 0x0000FF00) >>  8;
-	int b = ((shapeIndx) & 0x00FF0000) >> 16;
+	int r = ((shapeIndx + 1) & 0x000000FF) >>  0;
+	int g = ((shapeIndx + 1) & 0x000000FF) >>  0;
+	int b = ((shapeIndx + 1) & 0x000000FF) >> 0;
 
 
 		s->Bind();

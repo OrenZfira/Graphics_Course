@@ -17,9 +17,11 @@
 			scn->x = x2;
 			scn->y = y2;
 			rndr->UpdatePress(x2, y2);
-			if (rndr->Picking((int)x2, (int)y2))
+			if (button == GLFW_MOUSE_BUTTON_RIGHT && rndr->Picking((int)x2, (int)y2))
 			{
-				scn->ShapeTransformation(scn->xTranslate, 3, 0);
+				// std::cout<< scn->pickedShape << std::endl;
+				scn->actions.push({scn->pickedShape, scn->direction});
+				// scn->ShapeTransformation(scn->xTranslate, 3, 0);
 				rndr->UpdatePosition(x2, y2);
 				if(button == GLFW_MOUSE_BUTTON_LEFT){
 					rndr->Pressed();

@@ -308,8 +308,7 @@ Renderer::~Renderer()
 bool Renderer::Picking(int x, int y)
 {
 
-    Eigen::Vector4d pos;
-
+    Eigen::Vector3i pos;
     unsigned char data[3];
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_LIGHTING);
@@ -320,11 +319,64 @@ bool Renderer::Picking(int x, int y)
     glFinish();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
-    int error = glGetError();
-    std::cout << "x: " << x << " y: "<< y << std::endl;
-    std::cout << int(data[0]) << " " << int(data[1]) << " "<< unsigned int(data[2]) << " "<<unsigned int(data[3]) << std::endl;
+    // Eigen::Matrix3d tmp2 = scn->GetRotation();
+    // std::cout<<" matrix get Rotation:"<<std::endl;
+	// for (int i = 0; i < 3; i++)
+	// {
+	// 	for (int j = 0; j < 3; j++)
+	// 		std::cout<< tmp2(j,i)<<" ";
+	// 	std::cout<<std::endl;
+	// }
+    // std::cout << "x: " << x << " y: "<< y << std::endl;
+    // std::cout << int(data[0]) << " " << int(data[1]) << " "<< unsigned int(data[2]) << std::endl;
     int i = 0;
     isPicked =  scn->Picking(data,i);
+    if(isPicked){
+        Eigen::Matrix3d rotMat = scn->GetRotation();
+        Eigen::Vector3d tmp = Eigen::Vector3d(int(data[0]), int(data[1]), int(data[2])).normalized() ;
+        // tmp.normalize();
+        Eigen::Vector3d diraction = (rotMat * tmp);
+        std::cout <<"diraction: " << std::endl;
+        for(int i = 0; i < 3; i++){
+            std::cout<< diraction(i) << std::endl;
+        }
+        std::cout <<"normal: " << std::endl;
+        for(int i = 0; i < 3; i++){
+            std::cout<< tmp(i) << std::endl;
+        }
+        // std::cout << "vec: " << std::endl;
+        for(int i = 0; i < 3; i++){
+            // std::cout << tmp(i) << std::endl;
+            
+            if(tmp(i) - 0.1f > 0 && i == 0){//right or left wall rotation
+                if(diraction(i) > 0)//left wall rotation
+                    scn->pickedShape = 3;
+                else//right wall rotation
+                	scn->pickedShape = 2;
+                break;
+                // std::cout <<"diraction: " << diraction(i) << std::endl;
+
+            }
+            if(tmp(i) - 0.1f > 0 && i == 1){//top or bottom wall rotation
+                if(diraction(i) > 0)//top wall rotation
+                    scn->pickedShape = 4;
+                else//bottom wall rotation
+                	scn->pickedShape = 5;
+                break;
+                // std::cout << "diraction: " <<diraction(i) << std::endl;
+            }
+            if(tmp(i) - 0.1f > 0 && i == 2){//front or back wall rotation
+                // tmp2.normalize();
+                if(diraction(i) > 0)//fornt wall rotation
+                    scn->pickedShape = 0;
+                else//back wall rotation
+                	scn->pickedShape = 1;
+                // std::cout << "diraction: " << diraction(i) << std::endl; 
+                break;
+                // std::cout << "(0,0,1)" << std::endl;
+            }        
+        }
+    }
     return isPicked;
 
 }

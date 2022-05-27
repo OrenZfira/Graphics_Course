@@ -686,13 +686,15 @@ IGL_INLINE bool
 
     bool Viewer::Picking(unsigned char data[3], int newViewportIndx)
     {
-        int pickedID = 
-	    data[0] + 
-	    data[1] * 256 +
-	    data[2] * 256*256;
-        if (pickedID == 0x00ffffff)
+        int pickedID;
+        for(int i = 0; i <  3; i++){
+            if(int(data[i]))
+                pickedID = data[i] - 1;
+        }
+        if (pickedID == 0x000000fe)
             return false; // Full white, must be the background !
         pickedShape = pickedID;
+        std::cout<< "picked shape: " << pickedShape << std::endl;
         return true;
 
     }
