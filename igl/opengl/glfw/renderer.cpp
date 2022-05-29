@@ -322,7 +322,7 @@ bool Renderer::Picking(int x, int y)
     isPicked =  scn->Picking(data,0);
     if(isPicked){
         Eigen::Matrix3d rotMat = scn->GetRotation();
-        Eigen::Vector3d tmp = Eigen::Vector3d(int(data[0]), int(data[1]), int(data[2])).normalized() ;
+        Eigen::Vector3d tmp = Eigen::Vector3d(int(data[0]), int(data[1]), int(data[2])) ;
         Eigen::Vector3d diraction = (rotMat * tmp);         
         if(tmp(0) == 1){//right or left wall rotation
             if(diraction(2) > 0)//left wall rotation
