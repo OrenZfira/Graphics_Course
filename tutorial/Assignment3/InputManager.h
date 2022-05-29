@@ -149,6 +149,9 @@
 			case GLFW_KEY_Z:
 				scn->actions.push(8);
 				break;
+			case GLFW_KEY_M:
+				scn->Randomise();
+				break;
 			default:
 				break;
 

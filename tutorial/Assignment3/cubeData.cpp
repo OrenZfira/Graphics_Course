@@ -247,11 +247,11 @@ void cubeData::topCCW(){
     indexes[24] = temp;
     temp = indexes[15];
     indexes[15] = indexes[25];
-    temp2 = indexes[17];
+    temp2 = indexes[7];
     indexes[7] = temp;
-    temp = indexes[7];
-    indexes[25] = temp2;
-    indexes[17] = temp;
+    temp = indexes[17];
+    indexes[17] = temp2;
+    indexes[25] = temp;
 }
 
 

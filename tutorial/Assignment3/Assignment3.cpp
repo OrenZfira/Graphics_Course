@@ -1,6 +1,6 @@
 #include "Assignment3.h"
 #include <iostream>
-
+#include <random>
 
 static void printMat(const Eigen::Matrix4d& mat)
 {
@@ -178,6 +178,21 @@ void Assignment3::ScaleAllShapes(float amt,int viewportIndx)
 		if (data_list[i]->Is2Render(viewportIndx))
 		{
             data_list[i]->MyScale(Eigen::Vector3d(amt, amt, amt));
+		}
+	}
+}
+
+void Assignment3 :: Randomise(){
+	std::random_device myRandomDevice;
+	unsigned seed = myRandomDevice();
+	std::default_random_engine myRandomEngine(seed);
+	std::uniform_int_distribution<int> myUnifIntDist(0, 8);
+	int count = 0;
+	while (count < 10){
+		int choice = myUnifIntDist(myRandomEngine);
+		actions.push(choice);
+		if (choice < 6){
+			count++;
 		}
 	}
 }
