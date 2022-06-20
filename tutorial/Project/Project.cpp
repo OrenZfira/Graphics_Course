@@ -53,10 +53,10 @@ void Project::Init()
 	SetShapeShader(4, 2);
 
 
-	SetShapeMaterial(1, 0);
-	SetShapeMaterial(2, 0);	
-	SetShapeMaterial(3, 0);	
-	SetShapeMaterial(4, 0);
+	SetShapeMaterial(1, 2);
+	SetShapeMaterial(2, 2);	
+	SetShapeMaterial(3, 2);	
+	SetShapeMaterial(4, 2);
 
 	SetShapeMaterial(0, 1);
 
