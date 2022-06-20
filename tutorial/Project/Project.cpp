@@ -29,7 +29,7 @@ void Project::Init()
 	AddShader("shaders/pickingShader");
 	AddShader("shaders/cubemapShader");
 	AddShader("shaders/basicShaderTex");
-	AddShader("shaders/basicShader");
+	AddShader("shaders/basicShader1");
 	
 	AddTexture("textures/plane.png",2);
 	AddTexture("textures/cubemaps/a_", 3);
@@ -47,18 +47,21 @@ void Project::Init()
 	AddShape(zCylinder, 1, TRIANGLES);
 	AddShape(zCylinder, 2, TRIANGLES);
 	AddShape(Axis, -1, LINES);
-	//AddShapeFromFile("../res/objs/Cat_v1.obj", -1, TRIANGLES);
+
+	AddShape(Plane, -2, TRIANGLES, 1);
 	
 	SetShapeShader(1, 2);
 	SetShapeShader(2, 2);
 	SetShapeShader(3, 2);
 	SetShapeShader(4, 2);
+	SetShapeShader(5, 3);
 
 
 	SetShapeMaterial(1, 2);
 	SetShapeMaterial(2, 2);	
 	SetShapeMaterial(3, 2);	
 	SetShapeMaterial(4, 2);
+	SetShapeMaterial(5, 2);
 
 	SetShapeMaterial(0, 1);
 
@@ -79,8 +82,11 @@ void Project::Init()
 	ShapeTransformation(zTranslate, cylinderLen, 1);
 	data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
 
+	selected_data_index = 5;
+	ShapeTransformation(zTranslate, -1.1, 1);
 	selected_data_index = 0;
 	SetShapeStatic(0);
+	SetShapeStatic(5);
 
 
 	//SetShapeViewport(6, 1);

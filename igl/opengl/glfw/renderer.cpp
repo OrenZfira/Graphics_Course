@@ -307,7 +307,7 @@ Renderer::~Renderer()
 
 bool Renderer::Picking(int x, int y)
 {
-
+    return true;
     Eigen::Vector3i pos;
     unsigned char data[3];
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -22,6 +22,10 @@ int main(int argc,char *argv[])
 	scn->Init();    //adding shaders, textures, shapes to scene
     rndr->Init(scn,x,y,1,menu); // adding scene and viewports to the renderer
     disp.SetRenderer(rndr);
+	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	rndr->CopyDraw(1, rndr->viewport,1);
+	rndr->ClearDrawFlag(2, rndr->toClear);
+	rndr->SetDrawFlag(2, rndr->blend );
 
     disp.launch_rendering(rndr);
 

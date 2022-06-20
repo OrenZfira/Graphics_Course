@@ -103,7 +103,7 @@
 				// 	scn->Deactivate();
 				// else
 				// 	scn->Activate();
-				rndr->AddCamera(pos, 45.0, 800/800, 1.0f, 120.0f, 1);
+				rndr->AddCamera(pos, 45.0, 1200/800, 1.0f, 120.0f, 1);
 				scn->SetShapeMaterial(0, 3);
 				break;
 
