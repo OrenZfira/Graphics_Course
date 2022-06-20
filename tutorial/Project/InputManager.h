@@ -88,6 +88,7 @@
 	{
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Project* scn = (Project*)rndr->GetScene();
+		Eigen::Vector3d pos = Eigen::Vector3d(0, 0,10);
 		//rndr->FreeShapes(2);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
@@ -98,10 +99,12 @@
 				break;
 				
 			case GLFW_KEY_SPACE:
-				if (scn->IsActive())
-					scn->Deactivate();
-				else
-					scn->Activate();
+				// if (scn->IsActive())
+				// 	scn->Deactivate();
+				// else
+				// 	scn->Activate();
+				rndr->AddCamera(pos, 45.0, 800/800, 1.0f, 120.0f, 1);
+				scn->SetShapeMaterial(0, 3);
 				break;
 
 			case GLFW_KEY_UP:

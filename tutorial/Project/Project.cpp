@@ -23,8 +23,8 @@ Project::Project()
 
 void Project::Init()
 {		
-	unsigned int texIDs[3] = { 0 , 1, 2};
-	unsigned int slots[3] = { 0 , 1, 2 };
+	unsigned int texIDs[4] = { 0 , 1, 2,3};
+	unsigned int slots[4] = { 0 , 1, 2,3 };
 	
 	AddShader("shaders/pickingShader");
 	AddShader("shaders/cubemapShader");
@@ -32,13 +32,15 @@ void Project::Init()
 	AddShader("shaders/basicShader");
 	
 	AddTexture("textures/plane.png",2);
-	AddTexture("textures/cubemaps/Daylight Box_", 3);
+	AddTexture("textures/cubemaps/a_", 3);
 	AddTexture("textures/grass.bmp", 2);
+	AddTexture("textures/cubemaps/Daylight Box_", 3);
 	//AddTexture("../res/textures/Cat_bump.jpg", 2);
 
 	AddMaterial(texIDs,slots, 1);
 	AddMaterial(texIDs+1, slots+1, 1);
-	AddMaterial(texIDs + 2, slots + 2, 1);
+	AddMaterial(texIDs+2, slots+2, 1);
+	AddMaterial(texIDs + 3, slots + 3, 1);
 	
 	AddShape(Cube, -2, TRIANGLES);
 	AddShape(zCylinder, -1, TRIANGLES);
