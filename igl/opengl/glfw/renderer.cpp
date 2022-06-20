@@ -326,24 +326,24 @@ bool Renderer::Picking(int x, int y)
         Eigen::Vector3d diraction = (rotMat * tmp);         
         if(tmp(0) == 1){//right or left wall rotation
             if(diraction(2) > 0)//left wall rotation
-                scn->pickedShape = 2;
+                scn->selected_data_index = 2;
             else//right wall rotation
-                scn->pickedShape = 3;
+                scn->selected_data_index = 3;
             return true;
         }
         if(tmp(1) == 1){//top or bottom wall rotation
             if(diraction(2) > 0)//top wall rotation
-                scn->pickedShape = 4;
+                scn->selected_data_index = 4;
             else//bottom wall rotation
-                scn->pickedShape = 5;
+                scn->selected_data_index = 5;
             return true;
             // std::cout << "diraction: " <<diraction(i) << std::endl;
         }
         if(tmp(2) == 1 ){//front or back wall rotation
             if(diraction(2) > 0)//fornt wall rotation
-                scn->pickedShape = 0;
+                scn->selected_data_index = 0;
             else//back wall rotation
-                scn->pickedShape = 1;
+                scn->selected_data_index = 1;
             return true;
         }        
         
