@@ -18,7 +18,7 @@
 			if (rndr->Picking((int)x2, (int)y2))
 			{
 				rndr->UpdatePosition(x2, y2);
-				if(button == GLFW_MOUSE_BUTTON_LEFT)
+				if(button == GLFW_MOUSE_BUTTON_RIGHT)
 					rndr->Pressed();
 			}
 			else
@@ -30,6 +30,8 @@
 		else
 		{
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
+			if(button == GLFW_MOUSE_BUTTON_RIGHT)
+				rndr->Pressed();
 			rndr->UnPick(2);
 		}
 	}

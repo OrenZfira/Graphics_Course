@@ -30,6 +30,8 @@ void Project::Init()
 	AddShader("shaders/cubemapShader");
 	AddShader("shaders/basicShaderTex");
 	AddShader("shaders/basicShader1");
+	AddShader("shaders/pickingShader");
+
 	
 	AddTexture("textures/plane.png",2);
 	AddTexture("textures/cubemaps/a_", 3);
@@ -54,14 +56,14 @@ void Project::Init()
 	SetShapeShader(2, 2);
 	SetShapeShader(3, 2);
 	SetShapeShader(4, 2);
-	SetShapeShader(5, 3);
+	SetShapeShader(5, 4);
 
 
 	SetShapeMaterial(1, 2);
 	SetShapeMaterial(2, 2);	
 	SetShapeMaterial(3, 2);	
 	SetShapeMaterial(4, 2);
-	SetShapeMaterial(5, 2);
+	SetShapeMaterial(5, 0);
 
 	SetShapeMaterial(0, 1);
 

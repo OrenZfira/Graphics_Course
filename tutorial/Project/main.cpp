@@ -24,8 +24,8 @@ int main(int argc,char *argv[])
     disp.SetRenderer(rndr);
 	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
 	rndr->CopyDraw(1, rndr->viewport,1);
-	rndr->ClearDrawFlag(2, rndr->toClear);
-	rndr->SetDrawFlag(2, rndr->blend );
+	rndr->ClearDrawFlag(2, rndr->toClear | rndr->stencilTest);
+	rndr->SetDrawFlag(2, rndr->blend | rndr->inAction2 | rndr->scissorTest);
 
     disp.launch_rendering(rndr);
 
