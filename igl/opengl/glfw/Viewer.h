@@ -55,6 +55,7 @@ namespace glfw
    // enum class MouseButton {Left, Middle, Right};
    // enum class MouseMode { None, Rotation, Zoom, Pan, Translation} mouse_mode;
     virtual void Init(const std::string config);
+  virtual void ChangeBackground(){}
 	virtual void Animate() {}
 	virtual void WhenTranslate() {}
 	virtual Eigen::Vector3d GetCameraPosition() { return Eigen::Vector3d(0, 0, 0); }
@@ -161,6 +162,7 @@ public:
     int next_data_id;
     int next_shader_id; // for flags to mack sure all shaders are initlize with data
 	bool isActive;
+    float time;
     unsigned int staticScene;
 
     Shader* overlay_shader;

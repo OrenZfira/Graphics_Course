@@ -7,10 +7,11 @@
 
 	void glfw_mouse_callback(GLFWwindow* window,int button, int action, int mods)
 	{	
+		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
+		Project* scn = (Project*)rndr->GetScene();
+		scn->selected = scn->selected_data_index;
 		if (action == GLFW_PRESS)
 		{
-			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
-			Project* scn = (Project*)rndr->GetScene();
 			double x2, y2;
 			
 			glfwGetCursorPos(window, &x2, &y2);
@@ -106,7 +107,9 @@
 				// else
 				// 	scn->Activate();
 				rndr->AddCamera(pos, 45.0, 1200/800, 1.0f, 120.0f, 1);
-				scn->SetShapeMaterial(0, 3);
+				scn->selected_data_index = 0;
+				scn->ShapeTransformation(scn->scaleAll, 60.0f,0);
+				// scn->SetShapeMaterial(0, 1);
 				break;
 
 			case GLFW_KEY_UP:
@@ -147,11 +150,11 @@
 				rndr->MoveCamera(0, scn->zTranslate, -0.5f);
 				break;
 			case GLFW_KEY_1:
-				std::cout << "picked 1\n";
+				std::cout << "picked "<< scn->selected_data_index << std::endl;
 				scn->selected_data_index = 1;
 				break;
 			case GLFW_KEY_2:
-				std::cout << "picked 2\n";
+				std::cout << "picked "<< scn->selected_data_index <<std::endl;
 				scn->selected_data_index = 2;
 				break;
 			case GLFW_KEY_3:

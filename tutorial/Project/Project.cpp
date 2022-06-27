@@ -33,10 +33,10 @@ void Project::Init()
 	AddShader("shaders/pickingShader");
 
 	
-	AddTexture("textures/plane.png",2);
-	AddTexture("textures/cubemaps/a_", 3);
-	AddTexture("textures/grass.bmp", 2);
 	AddTexture("textures/cubemaps/Daylight Box_", 3);
+	AddTexture("textures/cubemaps/a_", 3);
+	AddTexture("textures/plane.png",2);
+	AddTexture("textures/grass.bmp", 2);
 	//AddTexture("../res/textures/Cat_bump.jpg", 2);
 
 	AddMaterial(texIDs,slots, 1);
@@ -59,13 +59,13 @@ void Project::Init()
 	SetShapeShader(5, 4);
 
 
-	SetShapeMaterial(1, 2);
-	SetShapeMaterial(2, 2);	
-	SetShapeMaterial(3, 2);	
-	SetShapeMaterial(4, 2);
+	SetShapeMaterial(1, 3);
+	SetShapeMaterial(2, 3);	
+	SetShapeMaterial(3, 3);	
+	SetShapeMaterial(4, 3);
 	SetShapeMaterial(5, 0);
 
-	SetShapeMaterial(0, 1);
+	SetShapeMaterial(0, 0);
 
 
 	selected_data_index = 0;
@@ -90,7 +90,8 @@ void Project::Init()
 	SetShapeStatic(0);
 	SetShapeStatic(5);
 
-
+	currMap = 0;
+	time = 3;
 	//SetShapeViewport(6, 1);
 //	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
@@ -142,8 +143,19 @@ void Project::WhenTranslate()
 void Project::Animate() {
     if(isActive)
 	{
-		if(selected_data_index > 0 )
-			data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
+		if (time <= 0){
+			Deactivate();
+			time = 3;
+			selected_data_index = 0;
+			return;
+		}
+		time-=0.05f;
+		selected_data_index = selected;
+		if (selected_data_index > 0) {
+			std:: cout << "animating" << std::endl;
+			// data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
+			ShapeTransformation(xTranslate, 0.1f, 1);
+		}
 	}
 }
 
@@ -156,6 +168,11 @@ void Project::ScaleAllShapes(float amt,int viewportIndx)
             data_list[i]->MyScale(Eigen::Vector3d(amt, amt, amt));
 		}
 	}
+}
+
+void Project::ChangeBackground() {
+	currMap ^= 1;
+	SetShapeMaterial(0, currMap);
 }
 
 Project::~Project(void)

@@ -228,7 +228,7 @@ IGL_INLINE bool
     //for (unsigned int i = 0; i<plugins.size(); ++i)
     //  if (plugins[i]->post_load())
     //    return true;
-
+    std::cout << "loaded mesh" << std::endl;
     return true;
   }
 
@@ -313,7 +313,6 @@ IGL_INLINE bool
 
     if (fname.length() == 0)
       return;
-    
     this->load_mesh_from_file(fname.c_str());
   }
 
@@ -621,6 +620,7 @@ IGL_INLINE bool
             data_list[pShape]->RemoveViewport(viewportIndx);
         }
         selected_data_index = 0;
+        std::cout << "=====================================" <<std::endl;
         pShapes.clear();
     }
 

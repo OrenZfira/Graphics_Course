@@ -300,6 +300,10 @@ public:
 
   // Shape material
   float shininess;
+  
+  //Animation
+  float time;
+  bool animate;
 
   // Unique identifier
   int id;
@@ -386,6 +390,7 @@ namespace igl
       SERIALIZE_MEMBER(line_width);
       SERIALIZE_MEMBER(line_color);
       SERIALIZE_MEMBER(shininess);
+      SERIALIZE_MEMBER(time);
       SERIALIZE_MEMBER(id);
     }
     template<>
