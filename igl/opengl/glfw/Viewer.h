@@ -89,6 +89,7 @@ namespace glfw
     // Helper functions
 
     IGL_INLINE void open_dialog_load_mesh();
+    IGL_INLINE int open_dialog_load_mat();
     IGL_INLINE void open_dialog_save_mesh();
 
 	IGL_INLINE void draw() {}
@@ -164,6 +165,9 @@ public:
 	bool isActive;
     float time;
     unsigned int staticScene;
+    int selected;
+    std::vector<std::vector<int>> layers;
+    std::vector<bool> showLayers;
 
     Shader* overlay_shader;
     Shader* overlay_point_shader;

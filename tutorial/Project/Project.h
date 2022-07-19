@@ -3,9 +3,9 @@
 
 class Project : public igl::opengl::glfw::Viewer
 {
+
 	int currMap;	
 public:
-	
 	Project();
 //	Project(float angle,float relationWH,float near, float far);
 	void Init();
@@ -15,7 +15,6 @@ public:
 	void Animate() override;
 	void ChangeBackground() override;
 	void ScaleAllShapes(float amt, int viewportIndx);
-	int selected;
 	~Project(void);
 };
 

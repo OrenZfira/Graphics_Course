@@ -103,7 +103,6 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	int g = (shapeIndx& 0x0000FF00) >>  8;
 	int b = (shapeIndx& 0x00FF0000) >> 16;
 
-
 		s->Bind();
 	s->SetUniformMat4f("Proj", Proj);
 	s->SetUniformMat4f("View", View);

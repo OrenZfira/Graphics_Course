@@ -9,14 +9,18 @@
 	{	
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Project* scn = (Project*)rndr->GetScene();
-		scn->selected = scn->selected_data_index;
+		
 		if (action == GLFW_PRESS)
 		{
+			scn->selected = scn->selected_data_index;
 			double x2, y2;
-			
 			glfwGetCursorPos(window, &x2, &y2);
 			rndr->UpdatePress(x2, y2);
-			rndr->UnPick(2);
+			if(rndr->IsMany())
+				rndr->ClearPickedShapes(2);
+			else if (rndr->IsPicked())
+				rndr->UnPick(2);
+			
 			if (rndr->Picking((int)x2, (int)y2))
 			{
 				rndr->UpdatePosition(x2, y2);
@@ -29,6 +33,8 @@
 		{
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 			if(button == GLFW_MOUSE_BUTTON_RIGHT){
+				
+				scn->selected_data_index = -1;
 				rndr->PickMany(2);
 				rndr->Pressed();
 			}
@@ -64,12 +70,10 @@
 		{
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			{
-
 				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT);
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 			{
-				
 				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_LEFT);
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany())

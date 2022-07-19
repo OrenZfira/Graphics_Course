@@ -283,6 +283,71 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
   }
   ImGui::PushItemWidth(100 * menu_scaling());
 
+  if (ImGui::Button("Set Material", ImVec2(-1, 0)))
+  {
+    int selected;
+    int tidx = viewer->open_dialog_load_mat();
+    if (tidx == -1)
+      return;
+    unsigned int arr[1] = {tidx};
+    int matid  = viewer->AddMaterial(arr, arr, 1);
+    if (viewer->pShapes.size() > 0 && viewer->selected == -1){
+      for (int shape : viewer->pShapes){
+        selected = shape;
+        if (selected != 0){
+          viewer->SetShapeMaterial(selected, matid);
+        }
+      }
+    }
+    else{
+      if (viewer->selected != 0){
+        viewer->SetShapeMaterial(viewer->selected, matid);
+      }
+    }
+    
+  }
+  if (ImGui::CollapsingHeader("Layers", ImGuiTreeNodeFlags_DefaultOpen)){
+    float w = ImGui::GetContentRegionAvailWidth();
+    float p = ImGui::GetStyle().FramePadding.x;
+    if (ImGui::Button("Add new Layer", ImVec2(-1,0))){
+      viewer->layers.push_back(std::vector<int>());
+      viewer->showLayers.push_back(1);
+    }
+    int  i = 0;
+    for(std::vector<int> curr : viewer->layers){
+      char label[64] = "Add to Layer ";
+      char integer_string[32];
+
+      sprintf(integer_string, "%d", i);
+      strcat(label, integer_string);
+      
+      if (ImGui::Button(label, ImVec2(3*(w-p)/5.f, 0)))
+      {
+        viewer->layers[i].push_back(viewer->selected);
+        std::cout << "added " << viewer->selected << "to Layer " << i << std::endl;
+      }
+      ImGui::SameLine(0, p);
+      bool hide = viewer->showLayers[i];
+      if (ImGui::Checkbox("Show Layer", &hide))
+      {
+        viewer->showLayers[i] = hide;
+        if(!viewer->showLayers[i]){
+          for (int shape : viewer->layers[i]){
+            viewer->data_list[shape]->Hide();
+          }
+        }
+        else{
+          for (int shape : viewer->layers[i]){
+            viewer->data_list[shape]->UnHide();
+          }
+        }
+      }
+      i++;
+    }
+  }
+
+  
+
 
   // Draw options
 //   if (ImGui::CollapsingHeader("Draw Options", ImGuiTreeNodeFlags_DefaultOpen))
@@ -304,7 +369,7 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
 //         ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);
   if (ImGui::CollapsingHeader("Animation", ImGuiTreeNodeFlags_DefaultOpen))
   {
-    ImGui::DragFloat("Time", &(viewer->time), 0.2f, 1.0f, 30.0f);
+    ImGui::SliderFloat("Time", &(viewer->time), 1.0f, 30.0f);
     // ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.6f);
     float w = ImGui::GetContentRegionAvailWidth();
     float p = ImGui::GetStyle().FramePadding.x;

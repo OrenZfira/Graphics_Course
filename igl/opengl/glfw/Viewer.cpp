@@ -316,6 +316,16 @@ IGL_INLINE bool
     this->load_mesh_from_file(fname.c_str());
   }
 
+  IGL_INLINE int Viewer::open_dialog_load_mat()
+  {
+    std::string fname = igl::file_dialog_open();
+
+    if (fname.length() == 0)
+      return -1;
+    int idx = AddTexture(fname,2);
+    return idx;
+  }
+
   IGL_INLINE void Viewer::open_dialog_save_mesh()
   {
     std::string fname = igl::file_dialog_save();
