@@ -45,9 +45,9 @@ void Project::Init()
 	AddMaterial(texIDs + 3, slots + 3, 1);
 	
 	AddShape(Cube, -2, TRIANGLES);
-	AddShape(zCylinder, -1, TRIANGLES);
-	AddShape(zCylinder, 1, TRIANGLES);
-	AddShape(zCylinder, 2, TRIANGLES);
+	AddShape(zCylinder, -1, TRIANGLES, 2);
+	AddShape(zCylinder, 1, TRIANGLES, 2);
+	AddShape(zCylinder, 2, TRIANGLES, 2);
 	AddShape(Axis, -1, LINES);
 
 	AddShape(Plane, -2, TRIANGLES, 1);

@@ -620,7 +620,6 @@ IGL_INLINE bool
             data_list[pShape]->RemoveViewport(viewportIndx);
         }
         selected_data_index = 0;
-        std::cout << "=====================================" <<std::endl;
         pShapes.clear();
     }
 

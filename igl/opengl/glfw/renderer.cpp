@@ -530,7 +530,7 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
                 }
                 drawInfos.emplace_back(new_draw_info);
             }
-            DrawInfo* temp = new DrawInfo(indx, 0, 1, 0, (indx < 1) | depthTest | clearDepth ,next_property_id);
+            DrawInfo* temp = new DrawInfo(indx, 0, 1, 0, (indx < 1) | depthTest | clearDepth | stencilTest | passStencil | clearStencil ,next_property_id);
             next_property_id <<= 1;
             drawInfos.emplace_back(temp);
             indx++;
