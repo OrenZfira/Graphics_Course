@@ -45,9 +45,9 @@ void Project::Init()
 	AddMaterial(texIDs + 3, slots + 3, 1);
 	
 	AddShape(Cube, -2, TRIANGLES);
-	AddShape(zCylinder, -1, TRIANGLES, 2);
-	AddShape(zCylinder, 1, TRIANGLES, 2);
-	AddShape(zCylinder, 2, TRIANGLES, 2);
+	AddShape(zCylinder, -1, TRIANGLES);
+	AddShape(zCylinder, 1, TRIANGLES);
+	AddShape(zCylinder, 2, TRIANGLES);
 	AddShape(Axis, -1, LINES);
 
 	AddShape(Plane, -2, TRIANGLES, 1);
@@ -99,9 +99,9 @@ void Project::Init()
 void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)
 {
 	Shader *s = shaders[shaderIndx];
-	int r = ((shapeIndx+1) & 0x000000FF) >>  0;
-	int g = ((shapeIndx+1) & 0x0000FF00) >>  8;
-	int b = ((shapeIndx+1) & 0x00FF0000) >> 16;
+	int r = (shapeIndx& 0x000000FF) >>  0;
+	int g = (shapeIndx& 0x0000FF00) >>  8;
+	int b = (shapeIndx& 0x00FF0000) >> 16;
 
 
 		s->Bind();

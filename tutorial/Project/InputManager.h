@@ -16,24 +16,23 @@
 			
 			glfwGetCursorPos(window, &x2, &y2);
 			rndr->UpdatePress(x2, y2);
+			rndr->UnPick(2);
 			if (rndr->Picking((int)x2, (int)y2))
 			{
 				rndr->UpdatePosition(x2, y2);
 				if(button == GLFW_MOUSE_BUTTON_RIGHT)
 					rndr->Pressed();
-			}
-			else
-			{
-				rndr->UnPick(2);
-			}
-		
+				
+			}	
 		}
 		else
 		{
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
-			if(button == GLFW_MOUSE_BUTTON_RIGHT)
+			if(button == GLFW_MOUSE_BUTTON_RIGHT){
+				rndr->PickMany(2);
 				rndr->Pressed();
-			rndr->UnPick(2);
+			}
+			// rndr->UnPick(2);
 		}
 	}
 	
@@ -160,6 +159,7 @@
 			case GLFW_KEY_3:
 				std::cout << "picked 3\n";
 				scn->selected_data_index = 3;
+				scn->data_list[3]->AddViewport(2);
 				break;
 			default:
 				break;

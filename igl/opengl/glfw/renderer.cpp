@@ -307,19 +307,25 @@ Renderer::~Renderer()
 
 bool Renderer::Picking(int x, int y)
 {
+    // return true;
+    Eigen::Vector3i pos;
+    unsigned char data[3];
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_LIGHTING);
+    Eigen::Matrix4f Proj = cameras[0]->GetViewProjection().cast<float>();
+    Eigen::Matrix4f View = cameras[0]->MakeTransScaled().inverse().cast<float>();
+    scn->Draw(0, Proj, View, 0, 65536,1);
+    glFlush();
+    glFinish();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
+    isPicked =  scn->Picking(data,0);
+    std::cout << "Picked: " << scn->selected_data_index << std::endl;
+    if (isPicked){
+        scn->data_list[scn->selected_data_index]->AddViewport(2);
+        scn->pShapes.push_back(scn->selected_data_index);
+    }
     return true;
-    // Eigen::Vector3i pos;
-    // unsigned char data[3];
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // glDisable(GL_LIGHTING);
-    // Eigen::Matrix4f Proj = cameras[0]->GetViewProjection().cast<float>();
-    // Eigen::Matrix4f View = cameras[0]->MakeTransScaled().inverse().cast<float>();
-    // scn->Draw(0, Proj, View, 0, 65536,1);
-    // glFlush();
-    // glFinish();
-    // glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    // glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
-    // isPicked =  scn->Picking(data,0);
     // if(isPicked){
     //     Eigen::Matrix3d rotMat = scn->GetRotation();
     //     Eigen::Vector3d tmp = Eigen::Vector3d(int(data[0]), int(data[1]), int(data[2])) ;

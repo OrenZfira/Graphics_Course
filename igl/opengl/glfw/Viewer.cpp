@@ -712,6 +712,10 @@ IGL_INLINE bool
 
     bool Viewer::Picking(unsigned char data[4], int newViewportIndx)
     {
+        selected_data_index = data[0]+data[1]*256+data[2]*65536;
+        if (selected_data_index != 0){
+            return true;
+        }
 
         return false;
 

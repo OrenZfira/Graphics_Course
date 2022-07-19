@@ -24,12 +24,14 @@ int main(int argc,char *argv[])
     disp.SetRenderer(rndr);
 	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
 	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
 	rndr->CopyDraw(1, rndr->viewport,1);
 	rndr->ClearDrawFlag(2, rndr->toClear | rndr->stencilTest);
 	rndr->SetDrawFlag(2, rndr->blend | rndr->inAction2 | rndr->scissorTest);
 
 	rndr->AddDraw(2, 0, 4, 0, rndr->stencil2 | rndr->stencilTest | rndr->depthTest | rndr->scaleAbit | rndr->onPicking);
-	// rndr->AddDraw(1, 0, 4, 0, rndr->stencilTest | rndr->depthTest);
+	rndr->AddDraw(1, 0, 4, 0, rndr->stencilTest | rndr->depthTest);
+	rndr->AddDraw(3,0,4,0,0);
 
     disp.launch_rendering(rndr);
 
