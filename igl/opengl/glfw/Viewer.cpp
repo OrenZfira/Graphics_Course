@@ -750,7 +750,7 @@ IGL_INLINE bool
         else
         {
             int ps = selected_data_index;
-            for (; parents[ps] > -1; ps = parents[ps]);
+            // for (; parents[ps] > -1; ps = parents[ps]);
             obj = (Movable*)data_list[ps];
         }
         obj->RotateInSystem(Eigen::Vector3d(0, 1, 0), dx);
