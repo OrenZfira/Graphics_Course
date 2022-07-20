@@ -13,5 +13,5 @@ uniform vec4 lightDirection;
 void main()
 {
 //gl_FragColor = vec4(1,0,0,1);
-	gl_FragColor = texture2D(sampler1, texCoord0); //you must have gl_FragColor
+	gl_FragColor = vec4(texture2D(sampler1, texCoord0).xyz, 0); //you must have gl_FragColor
 }

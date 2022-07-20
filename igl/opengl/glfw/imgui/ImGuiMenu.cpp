@@ -285,26 +285,28 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
 
   if (ImGui::Button("Set Material", ImVec2(-1, 0)))
   {
-    int selected;
     int tidx = viewer->open_dialog_load_mat();
-    if (tidx == -1)
-      return;
-    unsigned int arr[1] = {tidx};
-    int matid  = viewer->AddMaterial(arr, arr, 1);
-    if (viewer->pShapes.size() > 0 && viewer->selected == -1){
-      for (int shape : viewer->pShapes){
-        selected = shape;
-        if (selected != 0){
-          viewer->SetShapeMaterial(selected, matid);
+    if (tidx != -1){
+      unsigned int arr[1] = {tidx};
+      int matid  = viewer->AddMaterial(arr, arr, 1);
+            std::cout << viewer->selectedShapes.size() << std::endl;
+
+      //selected == -1 if there was no single picking after multi picking i.e. the multipicking is the real picking
+      if (viewer->selectedShapes.size() > 0 && viewer->selected == -1){ 
+        for (int shape : viewer->selectedShapes){
+          if (shape != 0){
+            viewer->SetShapeMaterial(shape, matid);
+          }
+      }
+    
+      }
+      else{
+        if (viewer->selected != 0){
+          viewer->SetShapeMaterial(viewer->selected, matid);
         }
       }
     }
-    else{
-      if (viewer->selected != 0){
-        viewer->SetShapeMaterial(viewer->selected, matid);
-      }
-    }
-    
+      
   }
   if (ImGui::CollapsingHeader("Layers", ImGuiTreeNodeFlags_DefaultOpen)){
     float w = ImGui::GetContentRegionAvailWidth();
@@ -320,17 +322,32 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
 
       sprintf(integer_string, "%d", i);
       strcat(label, integer_string);
-      
+
       if (ImGui::Button(label, ImVec2(3*(w-p)/5.f, 0)))
       {
-        viewer->layers[i].push_back(viewer->selected);
-        std::cout << "added " << viewer->selected << "to Layer " << i << std::endl;
+        if (viewer->selectedShapes.size() > 0 && viewer->selected == -1){ 
+          for (int shape : viewer->selectedShapes){
+            if (shape != 0){
+              viewer->layers[i].push_back(shape);
+              if(!viewer->showLayers[i])
+              viewer->data_list[shape]->Hide();
+            }
+          }
+        }
+        else if(viewer->selected != 0){
+          viewer->layers[i].push_back(viewer->selected);
+          if(!viewer->showLayers[i])
+            viewer->data_list[viewer->selected]->Hide();
+        }
       }
       ImGui::SameLine(0, p);
-      bool hide = viewer->showLayers[i];
-      if (ImGui::Checkbox("Show Layer", &hide))
+      char listLabel[64] = "layer ";
+      strcat(listLabel, integer_string);      
+      bool tmp = viewer->showLayers[i];
+      if (ImGui::Checkbox(listLabel, &tmp))
       {
-        viewer->showLayers[i] = hide;
+        std::cout << i << std::endl;
+        viewer->showLayers[i] = tmp;
         if(!viewer->showLayers[i]){
           for (int shape : viewer->layers[i]){
             viewer->data_list[shape]->Hide();
@@ -345,8 +362,26 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
       i++;
     }
   }
-
+ 
   
+  if (ImGui::Button("Blend on/off", ImVec2(-1, 0))){
+    if (viewer->selectedShapes.size() > 0 && viewer->selected == -1){ 
+      for (int shape : viewer->selectedShapes){
+        if (shape != 0){
+          if(viewer->data_list[shape]->shaderID == 2)
+            viewer->SetShapeShader(shape, 3);
+          else 
+            viewer->SetShapeShader(shape, 2);
+        }
+      }
+    }
+    else if(viewer->selected !=0 ){
+      if(viewer->data_list[viewer->selected]->shaderID == 2)
+        viewer->SetShapeShader(viewer->selected, 3);
+      else 
+        viewer->SetShapeShader(viewer->selected, 2);
+    }
+  }
 
 
   // Draw options

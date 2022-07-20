@@ -166,6 +166,7 @@ public:
     float time;
     unsigned int staticScene;
     int selected;
+    std::vector<int> selectedShapes;
     std::vector<std::vector<int>> layers;
     std::vector<bool> showLayers;
 

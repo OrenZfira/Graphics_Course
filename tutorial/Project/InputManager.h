@@ -13,29 +13,31 @@
 		if (action == GLFW_PRESS)
 		{
 			scn->selected = scn->selected_data_index;
+			scn->selectedShapes = scn->pShapes;
 			double x2, y2;
 			glfwGetCursorPos(window, &x2, &y2);
 			rndr->UpdatePress(x2, y2);
-			if(rndr->IsMany())
+			if(rndr->IsMany()){
+				scn->selected = -1;
 				rndr->ClearPickedShapes(2);
+				}
 			else if (rndr->IsPicked())
 				rndr->UnPick(2);
 			
-			if (rndr->Picking((int)x2, (int)y2))
+			if (button == GLFW_MOUSE_BUTTON_LEFT && rndr->Picking((int)x2, (int)y2))
 			{
 				rndr->UpdatePosition(x2, y2);
-				if(button == GLFW_MOUSE_BUTTON_RIGHT)
-					rndr->Pressed();
-				
 			}	
+			if(button == GLFW_MOUSE_BUTTON_RIGHT)
+					rndr->Pressed();
 		}
 		else
 		{
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 			if(button == GLFW_MOUSE_BUTTON_RIGHT){
 				
-				scn->selected_data_index = -1;
 				rndr->PickMany(2);
+				//to know that we picked many shapes for the menu
 				rndr->Pressed();
 			}
 			// rndr->UnPick(2);

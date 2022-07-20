@@ -48,13 +48,13 @@ void Project::Init()
 	AddShape(zCylinder, -1, TRIANGLES);
 	AddShape(zCylinder, 1, TRIANGLES);
 	AddShape(zCylinder, 2, TRIANGLES);
-	AddShape(Axis, -1, LINES);
+	AddShape(Axis, -1, LINES, 3);
 
 	AddShape(Plane, -2, TRIANGLES, 1);
 	
 	SetShapeShader(1, 2);
 	SetShapeShader(2, 2);
-	SetShapeShader(3, 2);
+	SetShapeShader(3, 3);
 	SetShapeShader(4, 2);
 	SetShapeShader(5, 4);
 
@@ -92,7 +92,7 @@ void Project::Init()
 
 	currMap = 0;
 	time = 3;
-	//SetShapeViewport(6, 1);
+	// SetShapeViewport(6, 1);
 //	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
 
@@ -102,7 +102,6 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	int r = (shapeIndx& 0x000000FF) >>  0;
 	int g = (shapeIndx& 0x0000FF00) >>  8;
 	int b = (shapeIndx& 0x00FF0000) >> 16;
-
 		s->Bind();
 	s->SetUniformMat4f("Proj", Proj);
 	s->SetUniformMat4f("View", View);
