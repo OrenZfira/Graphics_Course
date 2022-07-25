@@ -6,6 +6,8 @@ class Project : public igl::opengl::glfw::Viewer
 
 	int currMap;	
 public:
+
+	int currCamera;
 	Project();
 //	Project(float angle,float relationWH,float near, float far);
 	void Init();

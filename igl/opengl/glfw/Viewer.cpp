@@ -485,7 +485,7 @@ IGL_INLINE bool
                         Update(Proj, View , Model * scale_mat.matrix(), 0,i);
                     }
                     else
-                    {
+                    {   
                         Update(Proj, View ,  Model, 0,i);
                     }
                     shape->Draw(shaders[0], true);
@@ -656,6 +656,7 @@ IGL_INLINE bool
         {
             movCoeff = 2.0f;
 
+
             if (button == 0)
             {
 //                if (selected_data_index > 0 )
@@ -722,6 +723,9 @@ IGL_INLINE bool
 
     bool Viewer::Picking(unsigned char data[4], int newViewportIndx)
     {
+        for (int i =0; i<3; i++){
+            std::cout << "data[" <<i <<"]: " << (int)data[i] << std::endl; 
+        }
         selected_data_index = data[0]+data[1]*256+data[2]*65536;
         if (selected_data_index != 0){
             return true;
@@ -750,7 +754,7 @@ IGL_INLINE bool
         else
         {
             int ps = selected_data_index;
-            for (; parents[ps] > -1; ps = parents[ps]);
+            // for (; parents[ps] > -1; ps = parents[ps]);
             obj = (Movable*)data_list[ps];
         }
         obj->RotateInSystem(Eigen::Vector3d(0, 1, 0), dx);

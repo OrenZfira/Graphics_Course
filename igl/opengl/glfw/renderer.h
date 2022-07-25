@@ -132,7 +132,7 @@ public:
 
     void MoveCamera(int cameraIndx, int type, float amt);
 
-    bool Picking(int x, int y);
+    bool Picking(int x, int y, int vpid);
 
     void OutLine();
 
@@ -178,7 +178,7 @@ public:
     inline bool IsPicked() { return isPicked; }
     inline bool IsMany() const { return isMany; }
     void Init(igl::opengl::glfw::Viewer *scene, std::list<int> xViewport, std::list<int> yViewport, int pickingBits,igl::opengl::glfw::imgui::ImGuiMenu *_menu);
-
+    void SwitchCamera(std::vector<int>, int camera);
 
 private:
     // Stores all the viewing options

@@ -13,7 +13,7 @@ uniform vec4 lightDirection;
 out vec4 Color;
 void main()
 {
-    Color = texture(sampler1, lookat);
+    Color = vec4(texture(sampler1, lookat).xyz, 0);
 }  
 
 

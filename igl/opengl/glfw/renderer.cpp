@@ -209,13 +209,20 @@ void Renderer::UpdatePress(float xpos, float ypos)
 
 void Renderer::AddCamera(const Eigen::Vector3d& pos, float fov, float relationWH, float zNear, float zFar, int infoIndx)
 {
-    if (infoIndx > 0 && infoIndx < drawInfos.size())
-    {
-        drawInfos[infoIndx]->SetCamera(cameras.size());
-        drawInfos[infoIndx-1]->SetCamera(cameras.size());
-    }
+    // if (infoIndx > 0 && infoIndx < drawInfos.size())
+    // {
+        // drawInfos[infoIndx]->SetCamera(cameras.size());
+        // drawInfos[infoIndx-1]->SetCamera(cameras.size());
+    // }
     cameras.push_back(new igl::opengl::Camera(fov, relationWH, zNear, zFar));
     cameras.back()->MyTranslate(pos, false);
+    std::cout << cameras.size() << std::endl;
+}
+
+void Renderer::SwitchCamera(std::vector<int> drawInfs, int camera){
+    for (int draw : drawInfs){
+        drawInfos[draw]->SetCamera(camera);
+    }
 }
 
 void Renderer::AddViewport(int left, int bottom, int width, int height)
@@ -263,6 +270,9 @@ int Renderer::Create2Dmaterial(int texsNum)
 void Renderer::AddDraw(int viewportIndx, int cameraIndx, int shaderIndx, int buffIndx, unsigned int flags)
 {
     drawInfos.emplace_back(new DrawInfo(viewportIndx, cameraIndx, shaderIndx, buffIndx, flags,next_property_id));
+    // for(DrawInfo * curr : drawInfos){
+    //     std::cout<< curr->viewportIndx<< std::endl;
+    // }
     next_property_id <<= 1;
 }
 
@@ -287,6 +297,7 @@ void Renderer::CopyDraw(int infoIndx, int property, int indx)
             drawInfos.emplace_back(new DrawInfo(info->viewportIndx, info->cameraIndx, info->shaderIndx, indx, info->flags,next_property_id));
             break;
     }
+    // std::cout<< drawInfos.size() << std::endl;
     next_property_id <<= 1;
 }
 
@@ -305,24 +316,30 @@ Renderer::~Renderer()
 }
 
 
-bool Renderer::Picking(int x, int y)
+bool Renderer::Picking(int x, int y, int vpid)
 {
     // return true;
     Eigen::Vector3i pos;
     unsigned char data[3];
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_LIGHTING);
-    Eigen::Matrix4f Proj = cameras[0]->GetViewProjection().cast<float>();
-    Eigen::Matrix4f View = cameras[0]->MakeTransScaled().inverse().cast<float>();
-    scn->Draw(0, Proj, View, 0, 65536,1);
+    Eigen::Matrix4f Proj = cameras[drawInfos[0]->cameraIndx]->GetViewProjection().cast<float>();
+    Eigen::Matrix4f View = cameras[drawInfos[0]->cameraIndx]->MakeTransScaled().inverse().cast<float>();
+    if(vpid == 1){
+         Proj = cameras[1]->GetViewProjection().cast<float>();
+         View = cameras[1]->MakeTransScaled().inverse().cast<float>();
+    }
+
+    scn->Draw(0, Proj, View, vpid, 65536,1);
     glFlush();
     glFinish();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    std::cout << "x: " << x <<std::endl;
     glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
-    isPicked =  scn->Picking(data,0);
+    isPicked = scn->Picking(data,vpid);
     std::cout << "Picked: " << scn->selected_data_index << std::endl;
-    if (isPicked){
-        scn->data_list[scn->selected_data_index]->AddViewport(2);
+    if (vpid != 1 && isPicked){
+        scn->data_list[scn->selected_data_index]->AddViewport(3);
         scn->pShapes.push_back(scn->selected_data_index);
     }
     return true;
@@ -372,10 +389,10 @@ void Renderer::PickMany(int viewportIndx)
         int yMin = std::min(viewports[viewportCurrIndx].w() - yWhenPress, viewports[viewportCurrIndx].w() - yold);
         int xMax = std::max(xWhenPress, xold);
         int yMax = std::max(viewports[viewportCurrIndx].w() - yWhenPress, viewports[viewportCurrIndx].w() - yold);
-		depth = scn->AddPickedShapes(cameras[0]->GetViewProjection().cast<double>() * (cameras[0]->MakeTransd()).inverse(), viewports[viewportCurrIndx], viewportCurrIndx, xMin, xMax, yMin, yMax,viewportIndx);
+		depth = scn->AddPickedShapes(cameras[0]->GetViewProjection().cast<double>() * (cameras[drawInfos[0]->cameraIndx]->MakeTransd()).inverse(), viewports[viewportCurrIndx], viewportCurrIndx, xMin, xMax, yMin, yMax,viewportIndx);
         if (depth != -1)
         {
-            depth = (depth*2.0f - cameras[0]->GetFar()) / (cameras[0]->GetNear() - cameras[0]->GetFar());
+            depth = (depth*2.0f - cameras[drawInfos[0]->cameraIndx]->GetFar()) / (cameras[drawInfos[0]->cameraIndx]->GetNear() - cameras[drawInfos[0]->cameraIndx]->GetFar());
             isMany = true;
             isPicked = true;
         }
@@ -542,7 +559,7 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
             indx++;
         }
     }
-
+    // std::cout << "init: " << drawInfos.size() << std::endl;
     if (menu)
     {
         menu->callback_draw_viewer_menu = [&]()

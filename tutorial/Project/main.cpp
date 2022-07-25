@@ -11,29 +11,35 @@ int main(int argc,char *argv[])
 	const float FAR = 120.0f;
 	const int infoIndx = 2; 
 	std::list<int> x, y;
-	// x.push_back(DISPLAY_WIDTH/2);
+	x.push_back(DISPLAY_WIDTH/2);
 	x.push_back(DISPLAY_WIDTH);
 	y.push_back(DISPLAY_HEIGHT);
     Display disp = Display(DISPLAY_WIDTH, DISPLAY_HEIGHT, "OPENGL");
     igl::opengl::glfw::imgui::ImGuiMenu* menu = new igl::opengl::glfw::imgui::ImGuiMenu();
-    Renderer* rndr = new Renderer(CAMERA_ANGLE, (float)DISPLAY_WIDTH/(float)DISPLAY_HEIGHT, NEAR, FAR);
+    Renderer* rndr = new Renderer(CAMERA_ANGLE, (float)DISPLAY_WIDTH/(float)DISPLAY_HEIGHT/2, NEAR, FAR);
 	Project *scn = new Project();  //initializing scene
 	
     Init(disp,menu); //adding callback functions
 	scn->Init();    //adding shaders, textures, shapes to scene
-    rndr->Init(scn,x,y,1,menu); // adding scene and viewports to the renderer
+    rndr->Init(scn,x,y,3,menu); // adding scene and viewports to the renderer
     disp.SetRenderer(rndr);
-	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	rndr->AddViewport(0,0,DISPLAY_WIDTH, DISPLAY_HEIGHT);
-	rndr->CopyDraw(1, rndr->viewport,1);
-	rndr->ClearDrawFlag(2, rndr->toClear | rndr->stencilTest);
-	rndr->SetDrawFlag(2, rndr->blend | rndr->inAction2 | rndr->scissorTest);
+	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
+	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
+	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
+	rndr->CopyDraw(1, rndr->viewport,2);
+	// rndr->CopyDraw(0, rndr->viewport, 1);
+	
+	rndr->ClearDrawFlag(4, rndr->toClear | rndr->stencilTest);
+	rndr->SetDrawFlag(4, rndr->blend | rndr->inAction2 | rndr->scissorTest);
 	rndr->SetDrawFlag(1, rndr->blend);
+	// rndr->SetDrawFlag(2, rndr->onPicking);
 
-	rndr->AddDraw(2, 0, 4, 0, rndr->stencil2 | rndr->stencilTest | rndr->depthTest | rndr->scaleAbit | rndr->onPicking);
-	rndr->AddDraw(1, 0, 4, 0, rndr->stencilTest | rndr->depthTest);
-	rndr->AddDraw(3,0,4,0,0);
+	rndr->AddDraw(3, 0, 4, 0, rndr->stencil2 | rndr->stencilTest | rndr->depthTest | rndr->scaleAbit | rndr->onPicking);
+	rndr->AddDraw(2, 0, 4, 0, rndr->stencilTest | rndr->depthTest);
+	rndr->AddDraw(4,0,4,0,0);
+	rndr->AddCamera(Eigen::Vector3d(0,0,10), 0, (float)DISPLAY_WIDTH/(float)DISPLAY_HEIGHT/2, NEAR, FAR, 3);
+	rndr->AddCamera(Eigen::Vector3d(0.5, 0.5,10), 45.0, (float)1200/(float)1600, 1.0f, 120.0f, 4);
+	rndr->SwitchCamera({3}, 1);
 
     disp.launch_rendering(rndr);
 
