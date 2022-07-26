@@ -6,7 +6,7 @@ class Project : public igl::opengl::glfw::Viewer
 
 	int currMap;	
 public:
-
+	float t;
 	int currCamera;
 	Project();
 //	Project(float angle,float relationWH,float near, float far);
@@ -17,6 +17,7 @@ public:
 	void Animate() override;
 	void ChangeBackground() override;
 	void ScaleAllShapes(float amt, int viewportIndx);
+	float x,y;
 	~Project(void);
 };
 

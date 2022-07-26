@@ -270,9 +270,6 @@ int Renderer::Create2Dmaterial(int texsNum)
 void Renderer::AddDraw(int viewportIndx, int cameraIndx, int shaderIndx, int buffIndx, unsigned int flags)
 {
     drawInfos.emplace_back(new DrawInfo(viewportIndx, cameraIndx, shaderIndx, buffIndx, flags,next_property_id));
-    // for(DrawInfo * curr : drawInfos){
-    //     std::cout<< curr->viewportIndx<< std::endl;
-    // }
     next_property_id <<= 1;
 }
 
@@ -318,21 +315,23 @@ Renderer::~Renderer()
 
 bool Renderer::Picking(int x, int y, int vpid)
 {
-    // return true;
     Eigen::Vector3i pos;
     unsigned char data[3];
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDisable(GL_LIGHTING);
+    // Clear
+    Clear(0,0,0,0,GL_DEPTH_BUFFER_BIT);
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glDisable(GL_LIGHTING);
     Eigen::Matrix4f Proj = cameras[drawInfos[0]->cameraIndx]->GetViewProjection().cast<float>();
     Eigen::Matrix4f View = cameras[drawInfos[0]->cameraIndx]->MakeTransScaled().inverse().cast<float>();
     if(vpid == 1){
-         Proj = cameras[1]->GetViewProjection().cast<float>();
-         View = cameras[1]->MakeTransScaled().inverse().cast<float>();
+        Proj = cameras[1]->GetViewProjection().cast<float>();
+        View = cameras[1]->MakeTransScaled().inverse().cast<float>();
     }
 
-    scn->Draw(0, Proj, View, vpid, 65536,1);
-    glFlush();
-    glFinish();
+    // scn->Draw(0, Proj, View, vpid, 65536,1);
+    draw_by_info(vpid*2);
+    // glFlush();
+    // glFinish();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     std::cout << "x: " << x <<std::endl;
     glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -503,14 +502,13 @@ bool Renderer::UpdateViewport(int viewport)
 }
 
 void Renderer::MouseProccessing(int button, int mode, int viewportIndx)
-{
+{    
     if (isPicked || button == 0)
     {
-
 		if(button == 2)
-			scn->MouseProccessing(button, zrel, zrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[0]->MakeTransd(), viewportIndx);
+			scn->MouseProccessing(button, zrel, zrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[mode]->MakeTransd(), viewportIndx);
 		else
-			scn->MouseProccessing(button, xrel, yrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[0]->MakeTransd(), viewportIndx);
+			scn->MouseProccessing(button, xrel, yrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[mode]->MakeTransd(), viewportIndx);
     }
 
 }
@@ -565,10 +563,9 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
         menu->callback_draw_viewer_menu = [&]()
         {
             // Draw parent menu content
-            auto temp = Eigen::Vector4i(0,0,0,0); // set imgui to min size and top left corner
+            auto temp = Eigen::Vector4i(1050,0,1050,0); // set imgui to min size and top left corner
             menu->draw_viewer_menu(scn,cameras,temp, drawInfos);
         };
     }
 }
-
 

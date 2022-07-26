@@ -16,6 +16,8 @@ static void printMat(const Eigen::Matrix4d& mat)
 
 Project::Project()
 {
+	x=0;
+	y=0;
 }
 
 //Project::Project(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
@@ -24,10 +26,10 @@ Project::Project()
 
 void Project::Init()
 {		
-	unsigned int texIDs[5] = { 0 , 1, 2, 3, 4};
-	unsigned int slots[5] = { 0 , 1, 2, 3, 4 };
+	unsigned int texIDs[6] = { 0 , 1, 2, 3, 4, 5};
+	unsigned int slots[6] = { 0 , 1, 2, 3, 4, 5};
 
-	Bezier* bezier = new Bezier();
+	bezier = new Bezier();
 	
 	AddShader("shaders/pickingShader");
 	AddShader("shaders/cubemapShader");
@@ -41,6 +43,7 @@ void Project::Init()
 	AddTexture("textures/plane.png",2);
 	AddTexture("textures/grass.bmp", 2);
 	AddTexture("textures/snake1.png",2);
+	AddTexture("textures/black-square.png",2);
 	//AddTexture("../res/textures/Cat_bump.jpg", 2);
 
 	AddMaterial(texIDs,slots, 1);
@@ -48,12 +51,13 @@ void Project::Init()
 	AddMaterial(texIDs+2, slots+2, 1);
 	AddMaterial(texIDs + 3, slots + 3, 1);
 	AddMaterial(texIDs + 4, slots + 4, 1);
+	AddMaterial(texIDs + 5, slots + 5, 1);
 
 	AddShape(Cube, -2, TRIANGLES);
 	AddShape(zCylinder, -1, TRIANGLES);
 	AddShape(zCylinder, 1, TRIANGLES);
 	AddShape(zCylinder, 2, TRIANGLES);
-	AddShape(Axis, -1, LINES, 4);
+	AddShape(Axis, -1, LINES, 5);
 	// AddShape(zCylinder, -1, TRIANGLES,1);
 
 	AddShape(Plane, -2, TRIANGLES, 2);
@@ -62,7 +66,7 @@ void Project::Init()
 	AddShape(Octahedron, -1, TRIANGLES,1);
 	AddShape(Octahedron, -1, TRIANGLES,1);
 
-	AddShape(Cube, -2, TRIANGLES, 1);
+	// AddShape(Cube, -2, TRIANGLES, 1);
 
 
 
@@ -91,15 +95,15 @@ void Project::Init()
 	SetShapeMaterial(9, 4);
 
 	SetShapeMaterial(0, 0);
-	SetShapeMaterial(10, 1);
+	// SetShapeMaterial(10, 1);
 
 
 	selected_data_index = 0;
 	float cylinderLen = 1.6f;
 	float s = 60;
 	ShapeTransformation(scaleAll, s,0);
-	selected_data_index = 10;
-	ShapeTransformation(scaleAll, s,0);
+	// selected_data_index = 10;
+	// ShapeTransformation(scaleAll, s,0);
 	selected_data_index = 1;
 	data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
 	ShapeTransformation(zTranslate, cylinderLen / 2.0, 1);
@@ -117,22 +121,63 @@ void Project::Init()
 	selected_data_index = 0;
 	SetShapeStatic(0);
 	SetShapeStatic(5);
-SetShapeStatic(10);
+	SetShapeStatic(6);
+	selected_data_index = 6;
+	ShapeTransformation(zTranslate, -10, 1);
+
+	SetShapeStatic(7);
+	selected_data_index = 7;
+	ShapeTransformation(zTranslate, -10, 1);
+	SetShapeStatic(8);
+	selected_data_index = 8;
+	ShapeTransformation(zTranslate, -10, 1);
+	selected_data_index = 9;
+	SetShapeStatic(9);
+
+	ShapeTransformation(zTranslate, -10, 1);
+
 	for(int i = 6 ; i < 10; i++){
 		selected_data_index = i;
-		ShapeTransformation(scaleAll, 0.3f, 0);
-		data()->MyTranslate(bezier->segments[0].row(i-6).head(3),0);
-		// std::cout << "Row " << i << " is " << bezier->segments[0].row(i-6) << std::endl;
+		data()->MyScale({0.03f, 0.03f, 0.03f});
+		data()->MyTranslate(bezier->cps[i-6],0);
 	
 	}
-	// ShapeTransformation(scaleAll, 0.5f, 0);
-	selected_data_index = 0;
-
 	currMap = 0;
 	time = 3;
 	currCamera = 0;
-	// SetShapeViewport(6, 1);
-	// ReadPixel(); //uncomment when you are reading from the z-buffer
+	t = 0;
+
+	std::vector<Eigen::RowVector3d> points = bezier->GetPointsInSegment(0);
+	AddShape(Cube, -1, TRIANGLES, 4);
+	selected_data_index = 10;
+	data()->show_faces = 0;
+	data()->show_lines = 0;
+	data()->show_overlay = 0xFF;
+	for (int i =0; i<points.size()-1; i++){
+		data()->add_edges(points[i],points[i+1], Eigen::RowVector3d(0,1,1));
+	}
+
+	AddShape(Axis, -1, LINES, 4);
+	AddShape(Plane, -1, TRIANGLES, 4);
+
+	SetShapeShader(11, 2);
+	SetShapeShader(12, 2);
+
+
+	SetShapeMaterial(12, 5);
+	SetShapeStatic(10);
+	SetShapeStatic(11);
+	SetShapeStatic(12);
+
+	selected_data_index = 12;
+	data()->MyTranslate({0,0,-20},1);
+	ShapeTransformation(scaleAll, 100, 1);
+
+
+
+
+	selected_data_index = 0;
+
 }
 
 void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)
@@ -154,17 +199,7 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 0.0f);
 	else
 		s->SetUniform4f("lightColor", 4/100.0f, 60 / 100.0f, 99 / 100.0f, 0.5f);
-	//textures[0]->Bind(0);
-
-	
-	
-
-	//s->SetUniform1i("sampler2", materials[shapes[pickedShape]->GetMaterial()]->GetSlot(1));
-	//s->SetUniform4f("lightDirection", 0.0f , 0.0f, -1.0f, 0.0f);
-//	if(shaderIndx == 0)
-//		s->SetUniform4f("lightColor",r/255.0f, g/255.0f, b/255.0f,1.0f);
-//	else 
-//		s->SetUniform4f("lightColor",0.7f,0.8f,0.1f,1.0f);
+		
 	s->Unbind();
 }
 
@@ -180,19 +215,20 @@ void Project::WhenTranslate()
 void Project::Animate() {
     if(isActive)
 	{
-		if (time <= 0){
+		float dt = (0.02/time)*bezier->segNum;
+		if (t > 1){
 			Deactivate();
-			time = 3;
+			t=0;
 			selected_data_index = 0;
 			return;
 		}
-		time-=0.05f;
-		selected_data_index = selected;
-		if (selected_data_index > 0) {
-			std:: cout << "animating" << std::endl;
-			// data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
-			ShapeTransformation(xTranslate, 0.1f, 1);
+		Eigen::vector4d vel = bezier->GetVelocity(0,t, dt);
+		for(int i = 0; i < data_list.size(); i++){
+			if (data_list[i]->viewports & 1 && !(data_list[i]->IsStatic()) && parents[i] == -1){
+				selected_data_index = i;
+			}
 		}
+		t+=dt;
 	}
 }
 

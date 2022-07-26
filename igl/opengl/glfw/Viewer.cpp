@@ -569,7 +569,7 @@ IGL_INLINE bool
       data()->mode = mode;
       data()->shaderID = 1;
       data()->viewports = 1 << viewport;
-      //data()->is_visible = 0x1;
+    //   data()->is_visible = 0x1;
       data()->show_lines = 0;
       data()->show_overlay = 0;
       data()->hide = false;

@@ -25,8 +25,11 @@ int main(int argc,char *argv[])
     disp.SetRenderer(rndr);
 	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
 	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
+	rndr->AddViewport(DISPLAY_WIDTH/2, 0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
 	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
 	rndr->CopyDraw(1, rndr->viewport,2);
+	rndr->CopyDraw(3, rndr->viewport,4);
+	// rndr->AddDraw(5,0,4,0, rndr->depthTest);
 	// rndr->CopyDraw(0, rndr->viewport, 1);
 	
 	rndr->ClearDrawFlag(4, rndr->toClear | rndr->stencilTest);
@@ -35,11 +38,12 @@ int main(int argc,char *argv[])
 	// rndr->SetDrawFlag(2, rndr->onPicking);
 
 	rndr->AddDraw(3, 0, 4, 0, rndr->stencil2 | rndr->stencilTest | rndr->depthTest | rndr->scaleAbit | rndr->onPicking);
+	rndr->AddDraw(5,0,2,0,0);
 	rndr->AddDraw(2, 0, 4, 0, rndr->stencilTest | rndr->depthTest);
-	rndr->AddDraw(4,0,4,0,0);
+	rndr->AddDraw(5,0,2,0,0);
 	rndr->AddCamera(Eigen::Vector3d(0,0,10), 0, (float)DISPLAY_WIDTH/(float)DISPLAY_HEIGHT/2, NEAR, FAR, 3);
-	rndr->AddCamera(Eigen::Vector3d(0.5, 0.5,10), 45.0, (float)1200/(float)1600, 1.0f, 120.0f, 4);
-	rndr->SwitchCamera({3}, 1);
+	rndr->AddCamera(Eigen::Vector3d(0.5, 0.5,10), 30.0, (float)1200/(float)1600, 1.0f, 120.0f, 4);
+	rndr->SwitchCamera({2,3,5}, 1);
 
     disp.launch_rendering(rndr);
 

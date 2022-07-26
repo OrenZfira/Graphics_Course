@@ -412,7 +412,6 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     {
       std::cout << "Playing" << std::endl;
       viewer->Activate();
-      
     }
     ImGui::SameLine(0, p);
     if (ImGui::Button("Pause", ImVec2((w-p)/2.f, 0)))

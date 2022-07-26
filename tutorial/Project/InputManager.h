@@ -9,18 +9,19 @@
 	{	
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Project* scn = (Project*)rndr->GetScene();
-		
+		double x2, y2;
+		glfwGetCursorPos(window, &x2, &y2);
+		scn->x = x2;
+		scn->y = y2;
 		if (action == GLFW_PRESS)
 		{
 			scn->selected = scn->selected_data_index;
 			scn->selectedShapes = scn->pShapes;
-			double x2, y2;
-			glfwGetCursorPos(window, &x2, &y2);
 			rndr->UpdatePress(x2, y2);
 			if(rndr->IsMany()){
-				scn->selected = -1;
+				scn->selected = -1; //to know that we picked many shapes for the menu
 				rndr->ClearPickedShapes(3);
-				}
+			}
 			else if (rndr->IsPicked())
 				rndr->UnPick(3);
 			int vpid = rndr->CheckViewport((int)x2, (int) y2, 0) ? 0 : 1; 
@@ -35,9 +36,7 @@
 		{
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 			if(button == GLFW_MOUSE_BUTTON_RIGHT){
-				
 				rndr->PickMany(3);
-				//to know that we picked many shapes for the menu
 				rndr->Pressed();
 			}
 			// rndr->UnPick(2);
@@ -56,7 +55,7 @@
 		}
 		else
 		{
-			rndr->MoveCamera(0, rndr->zTranslate, (float)yoffset);
+			rndr->MoveCamera(scn->currCamera, rndr->zTranslate, (float)yoffset);
 		}
 		
 	}
@@ -71,15 +70,50 @@
 		{
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
 			{
-				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT);
+				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT, scn->currCamera);
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 			{
-				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_LEFT);
+				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_LEFT, scn->currCamera);
 			}
-			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany())
-					rndr->MouseProccessing(GLFW_MOUSE_BUTTON_RIGHT);
+			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany()){
+				float ydiff = (- ypos + scn->y)/400.0;
+				float xdiff = (xpos-scn->x)/400.0; 
 
+				for(int i : scn->pShapes){
+					scn->selected_data_index = i;
+					scn->data()->MyTranslate(Eigen::Vector3d(xdiff,ydiff,0), false);
+				}
+				scn->y = ypos;
+				scn->x = xpos;				
+				}
+					
+
+		}
+		else
+		{
+			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+			{
+				float ydiff = (- ypos + scn->y)/400.0;
+				float xdiff = (xpos-scn->x)/400.0;
+				Eigen::Vector3d temp = Eigen::Vector3d(xdiff,ydiff,0);
+				if (scn->selected_data_index >= 6 && scn->selected_data_index <= 9){
+					scn->data()->MyTranslate(temp, false);
+					scn->bezier->ChangeCpt(scn->selected_data_index-6, temp);
+					int index = scn->selected_data_index;
+					scn->selected_data_index = 10;
+					scn->data()->clear_edges();
+					std::vector<Eigen::RowVector3d> points = scn->bezier->GetPointsInSegment(0);
+					for (int i =0; i<points.size()-1; i++){
+						scn->data()->add_edges(points[i],points[i+1], Eigen::RowVector3d(0,1,1));
+					}
+					scn->selected_data_index = index;
+				}
+				scn->y = ypos;
+				scn->x = xpos;				
+
+				
+			}
 		}
 	}
 
@@ -96,7 +130,7 @@
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Project* scn = (Project*)rndr->GetScene();
 		Eigen::Vector3d pos = Eigen::Vector3d(0, 0,10);
-		std::vector<int> tmp = {0,1,3, 4, 5,6};
+		std::vector<int> tmp = {0,1, 4,6,7,8};
 		//rndr->FreeShapes(2);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{

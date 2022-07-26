@@ -19,6 +19,7 @@
 #include "ViewerPlugin.h"
 #include "igl/opengl/Movable.h"
 #include "igl/opengl/glfw/Material.h"
+#include "../../../tutorial/Project/Bezier.h"
 
 
 #include <Eigen/Core>
@@ -164,11 +165,13 @@ public:
     int next_shader_id; // for flags to mack sure all shaders are initlize with data
 	bool isActive;
     float time;
+
     unsigned int staticScene;
     int selected;
     std::vector<int> selectedShapes;
     std::vector<std::vector<int>> layers;
     std::vector<bool> showLayers;
+    Bezier* bezier;
 
     Shader* overlay_shader;
     Shader* overlay_point_shader;
