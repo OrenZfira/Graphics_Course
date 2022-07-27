@@ -190,7 +190,7 @@ void Project::Animate() {
 		}
 		Eigen::Vector3d vel = bezier->GetVelocity(0,t, dt);
 		for(int i = 0; i < data_list.size(); i++){
-			if (data_list[i]->viewports & 1 && !(data_list[i]->IsStatic()) && parents[i] == -1){
+			if (data_list[i]->viewports & 1 && !(data_list[i]->IsStatic()) && parents[i] == -1 && !(data_list[i]->hide)){
 				selected_data_index = i;
 				data()->MyTranslate(vel, 1);
 			}

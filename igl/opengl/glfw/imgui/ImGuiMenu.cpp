@@ -405,9 +405,9 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
   
   if(viewer->finished){
     std::vector<int> drawInfs = {0,1, 4,6,7,8};
-    for (int i = 0; viewer->cameraShapes.size(); i++){
+    for (int i = 0; i < viewer->cameraShapes.size(); i++){
         if (i+2 != viewer->currCamera){
-          viewer->data_list[i+2]->UnHide();
+          viewer->data_list[viewer->cameraShapes[i]]->UnHide();
         }
       }
     for (int draw : drawInfs){
@@ -442,11 +442,11 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     {
       std::cout << "Pause" << std::endl;
       viewer->Deactivate();
-      for (int i = 0; viewer->cameraShapes.size(); i++){
+      for (int i = 0; i < viewer->cameraShapes.size(); i++){
           if (i+2 != viewer->currCamera){
-            viewer->data_list[i+2]->UnHide();
+            viewer->data_list[viewer->cameraShapes[i]]->UnHide();
           }
-        }
+      }
       std::vector<int> drawInfs = {0,1, 4,6,7,8};
       for (int draw : drawInfs){
         drawInfos[draw]->SetCamera(viewer->currCamera);
