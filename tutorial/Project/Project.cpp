@@ -22,8 +22,10 @@ Project::Project()
 	currMap = 0;
 	time = 3;
 	currCamera = 0;
+	animCamera = 0;
 	t = 0;
 	fog = false;
+	finished = false;
 }
 
 //Project::Project(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
@@ -31,8 +33,8 @@ Project::Project()
 //}
 void Project::Init()
 {		
-	unsigned int texIDs[6] = { 0 , 1, 2, 3, 4, 5};
-	unsigned int slots[6] = { 0 , 1, 2, 3, 4, 5};
+	unsigned int texIDs[7] = { 0 , 1, 2, 3, 4, 5,6};
+	unsigned int slots[7] = { 0 , 1, 2, 3, 4, 5,6};
 
 	bezier = new Bezier();
 	
@@ -49,6 +51,7 @@ void Project::Init()
 	AddTexture("textures/grass.bmp", 2);
 	AddTexture("textures/snake1.png",2);
 	AddTexture("textures/black-square.png",2);
+	AddTexture("textures/camera_tex.jpeg",2);
 	
 
 	AddMaterial(texIDs,slots, 1);
@@ -57,6 +60,7 @@ void Project::Init()
 	AddMaterial(texIDs + 3, slots + 3, 1);
 	AddMaterial(texIDs + 4, slots + 4, 1);
 	AddMaterial(texIDs + 5, slots + 5, 1);
+	AddMaterial(texIDs + 6, slots + 6, 1);
 
 	AddShape(Cube, -2, TRIANGLES);
 	AddShape(Axis, -1, LINES, 5);
@@ -87,12 +91,13 @@ void Project::Init()
 	SetShapeMaterial(6, 4);
 	SetShapeMaterial(9, 5);
 
-	AddShape(Cube, -1, TRIANGLES);
-	SetShapeShader(10, 2);
-	SetShapeMaterial(10,3);
-	selected_data_index = 10;
-	ShapeTransformation(zTranslate, -10, 1);
-	// ShapeTransformation(xTranslate, 4, 0);
+	// AddShape(Cube, -1, TRIANGLES);
+	// SetShapeShader(10, 2);
+	// SetShapeMaterial(10,6);
+	// selected_data_index = 10;
+	// ShapeTransformation(zTranslate, -10, 1);
+	// ShapeTransformation(xTranslate, 1, 0);
+	
 
 
 
@@ -148,6 +153,7 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	s->SetUniformMat4f("View", View);
 	s->SetUniformMat4f("Model", Model);
 	s->SetUniform1i("fog", (int)fog);
+	s->SetUniform4f("fogColour", fog_colour[0], fog_colour[1], fog_colour[2], 0);
 	s->SetUniform4f ("camera", cameraLocs[currCamera][0],cameraLocs[currCamera][1],cameraLocs[currCamera][2], 0);
 	if (data_list[shapeIndx]->GetMaterial() >= 0 && !materials.empty())
 	{
@@ -177,6 +183,7 @@ void Project::Animate() {
 		float dt = (0.02/time)*bezier->segNum;
 		if (t > 1){
 			Deactivate();
+			finished = true;
 			t=0;
 			selected_data_index = 0;
 			return;
@@ -185,7 +192,7 @@ void Project::Animate() {
 		for(int i = 0; i < data_list.size(); i++){
 			if (data_list[i]->viewports & 1 && !(data_list[i]->IsStatic()) && parents[i] == -1){
 				selected_data_index = i;
-				data()->MyTranslate(vel, 0);
+				data()->MyTranslate(vel, 1);
 			}
 		}
 		t+=dt;

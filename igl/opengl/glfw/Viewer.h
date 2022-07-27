@@ -166,6 +166,7 @@ public:
 	bool isActive;
     float time;
     bool fog;
+    float fog_colour[3];
     std::vector<Eigen::Vector3d> cameraLocs;
 
     unsigned int staticScene;
@@ -174,6 +175,11 @@ public:
     std::vector<std::vector<int>> layers;
     std::vector<bool> showLayers;
     Bezier* bezier;
+    float scaleFactor;
+	  int currCamera;
+    int animCamera;
+    bool finished;
+    std::vector<int> cameraShapes;
 
     Shader* overlay_shader;
     Shader* overlay_point_shader;
@@ -245,6 +251,8 @@ public:
       int AddShader(const std::string &Vertex_Shader, const std::string &Fragment_shader);
 
       void SetParent(int indx, int newValue, bool savePosition);
+
+      void ScalePickedShape();
   };
 
 } // end namespace

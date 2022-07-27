@@ -85,6 +85,17 @@ void Movable::ZeroTrans() {
     Tout = Eigen::Affine3d::Identity();
 }
 
+void Movable::ZeroRot(){
+	for(int i =0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			if(i==j)
+				Tout(i,j) = 1;
+			else
+				Tout(i,j) = 0;
+		}
+	}
+}
+
 
 
 

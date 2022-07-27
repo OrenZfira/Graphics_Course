@@ -69,7 +69,9 @@ namespace glfw
     selected_data_index(0),
     next_data_id(1),
     next_shader_id(1),
-	isActive(false)
+    fog_colour{0.8, 0.8,0.8},
+	isActive(false),
+    scaleFactor(1)
   {
     data_list.front() = new ViewerData();
     data_list.front()->id = 0;
@@ -870,6 +872,21 @@ IGL_INLINE bool
             Eigen::Vector4d tmp = data_list[newValue]->MakeTransd() * (data_list[indx]->MakeTransd()).inverse() * Eigen::Vector4d(0,0,0,1);
             data_list[indx]->ZeroTrans();
             data_list[indx]->MyTranslate(-tmp.head<3>(), false);
+        }
+    }
+
+    void Viewer::ScalePickedShape(){
+        if (selectedShapes.size() > 0 && selected == -1){ 
+            for (int shape : selectedShapes){
+            if (shape > 0 && data_list[shape]->Is2Render(0)){
+                data_list[shape]->MyScale(Eigen::Vector3d{scaleFactor,scaleFactor,scaleFactor});
+            }
+        }
+        }
+        else{
+            if (selected != 0 && data_list[selected]->Is2Render(0)){
+                data_list[selected]->MyScale(Eigen::Vector3d{scaleFactor,scaleFactor,scaleFactor});
+            }
         }
     }
 

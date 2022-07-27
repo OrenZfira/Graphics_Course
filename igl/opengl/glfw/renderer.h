@@ -180,6 +180,7 @@ public:
     inline bool IsMany() const { return isMany; }
     void Init(igl::opengl::glfw::Viewer *scene, std::list<int> xViewport, std::list<int> yViewport, int pickingBits,igl::opengl::glfw::imgui::ImGuiMenu *_menu);
     void SwitchCamera(std::vector<int> drawInfs, int camera);
+    void ResetCamera(int camera);
 
 private:
     // Stores all the viewing options

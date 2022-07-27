@@ -326,8 +326,8 @@ bool Renderer::Picking(int x, int y, int vpid)
     }
 
     draw_by_info(vpid*2);
-    // glFlush();
-    // glFinish();
+    glFlush();
+    glFinish();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
     isPicked = scn->Picking(data,vpid);
@@ -508,9 +508,9 @@ void Renderer::MouseProccessing(int button, int mode, int viewportIndx)
     if (isPicked || button == 0)
     {
 		if(button == 2)
-			scn->MouseProccessing(button, zrel, zrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[mode]->MakeTransd(), viewportIndx);
+			scn->MouseProccessing(button, zrel, zrel, CalcMoveCoeff(mode, viewports[viewportIndx].w()), cameras[mode]->MakeTransd(), viewportIndx);
 		else
-			scn->MouseProccessing(button, xrel, yrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[mode]->MakeTransd(), viewportIndx);
+			scn->MouseProccessing(button, xrel, yrel, CalcMoveCoeff(mode, viewports[viewportIndx].w()), cameras[mode]->MakeTransd(), viewportIndx);
     }
 
 }

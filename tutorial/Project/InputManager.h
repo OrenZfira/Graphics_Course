@@ -56,11 +56,26 @@ static void printMat(const Eigen::Matrix4d& mat)
 		{
 			rndr->UpdateZpos((int)yoffset);
 			rndr->MouseProccessing(GLFW_MOUSE_BUTTON_MIDDLE);
+			bool toMoveCam = false;
+			for(int i = 0; i<scn->cameraShapes.size(); i++){
+				if(scn->cameraShapes[i] == scn->selected_data_index){
+					Eigen::Matrix4d tmp = scn->data()->MakeTransd();
+					rndr->MoveCamera(i+2, rndr->resetPos,0);//to zero
+					rndr->MoveCamera(i+2, scn->xTranslate, tmp(0,3));
+					rndr->MoveCamera(i+2, scn->yTranslate, tmp(1,3));
+					rndr->MoveCamera(i+2, scn->zTranslate, tmp(2,3));
+					break;
+				}
+			}
 		}
 		else
 		{
 			rndr->MoveCamera(scn->currCamera, rndr->zTranslate, (float)yoffset);
+			if (scn->currCamera > 1){
+				scn->data_list[scn->cameraShapes[scn->currCamera - 2]]->MyTranslate({0,0,yoffset}, true);
+			}
 			scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, 0, yoffset});
+
 		}
 		
 	}
@@ -80,10 +95,12 @@ static void printMat(const Eigen::Matrix4d& mat)
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 			{
 				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_LEFT, scn->currCamera);
+
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany()){
 				float ydiff = (- ypos + scn->y)/400.0;
 				float xdiff = (xpos-scn->x)/400.0; 
+				std::vector<int> toMove;
 
 				for(int i : scn->pShapes){
 					scn->selected_data_index = i;
@@ -150,22 +167,38 @@ static void printMat(const Eigen::Matrix4d& mat)
 				break;
 			case GLFW_KEY_UP:
 				rndr->MoveCamera(scn->currCamera, scn->xRotate, 0.05f);
+				if(scn->currCamera!=0)
+					scn->selected_data_index =  scn->cameraShapes[scn->currCamera-2];
+					scn->ShapeTransformation(scn->xRotate, 0.05f, 1);
 				break;
 			case GLFW_KEY_DOWN:
 				rndr->MoveCamera(scn->currCamera, scn->xRotate, -0.05f);
+				if(scn->currCamera!=0)
+					scn->selected_data_index =  scn->cameraShapes[scn->currCamera-2];
+					scn->ShapeTransformation(scn->xRotate, -0.05f, 1);
 				break;
 			case GLFW_KEY_LEFT:
 				rndr->MoveCamera(scn->currCamera, scn->yRotate, 0.05f);
+				if(scn->currCamera!=0)
+					scn->selected_data_index =  scn->cameraShapes[scn->currCamera-2];
+					scn->ShapeTransformation(scn->yRotate, 0.05f, 1);
 				break;
 			case GLFW_KEY_RIGHT:
 				rndr->MoveCamera(scn->currCamera, scn->yRotate, -0.05f);
+				if(scn->currCamera!=0)
+					scn->selected_data_index =  scn->cameraShapes[scn->currCamera-2];
+					scn->ShapeTransformation(scn->yRotate, -0.05f, 1);
 				break;
 			case GLFW_KEY_U:
 				rndr->MoveCamera(scn->currCamera, scn->yTranslate, 0.25f);
+				if(scn->currCamera!=0)
+					scn->data_list[scn->cameraShapes[scn->currCamera-2]]->MyTranslate({0, 0.25f,0}, 1);
 				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, 0.25, 0});
 				break;
 			case GLFW_KEY_D:
 				rndr->MoveCamera(scn->currCamera, scn->yTranslate, -0.25f);
+				if(scn->currCamera!=0)
+					scn->data_list[scn->cameraShapes[scn->currCamera-2]]->MyTranslate({0, -0.25f,0}, 1);
 				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, -0.25, 0});
 				break;
 			case GLFW_KEY_L:

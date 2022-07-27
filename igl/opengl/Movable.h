@@ -24,6 +24,7 @@ public:
     void MyRotate(const Eigen::Matrix3d &rot);
     void MyScale(Eigen::Vector3d amt);
 
+	void ZeroRot();
 	void ZeroTrans();
 
 	Eigen::Matrix3d GetRotation() const{ return Tout.rotation().matrix(); }
