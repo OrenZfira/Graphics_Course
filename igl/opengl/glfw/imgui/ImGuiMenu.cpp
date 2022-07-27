@@ -261,6 +261,7 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     else {
         camera[0]->SetProjection(camera[0]->_fov > 0 ? camera[0]->_fov : 45,camera[0]->_relationWH);
       }
+    ImGui::Checkbox("Fog", &(viewer->fog));
 
 //       ImGui::PopItemWidth();
 //   }

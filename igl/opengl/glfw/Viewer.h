@@ -165,6 +165,7 @@ public:
     int next_shader_id; // for flags to mack sure all shaders are initlize with data
 	bool isActive;
     float time;
+    bool fog;
 
     unsigned int staticScene;
     int selected;

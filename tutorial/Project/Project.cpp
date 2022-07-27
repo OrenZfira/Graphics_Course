@@ -1,6 +1,7 @@
 #include "Project.h"
 #include <iostream>
 #include "Bezier.h"
+#include "../../igl/PI.h"
 
 
 static void printMat(const Eigen::Matrix4d& mat)
@@ -22,6 +23,7 @@ Project::Project()
 	time = 3;
 	currCamera = 0;
 	t = 0;
+	fog = false;
 }
 
 //Project::Project(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
@@ -75,6 +77,7 @@ void Project::Init()
 	SetShapeShader(4, 2);
 	SetShapeShader(5, 2);
 	SetShapeShader(6, 2);
+	SetShapeShader(9, 3);
 
 	SetShapeMaterial(0, 0);
 	SetShapeMaterial(2, 3);	
@@ -83,6 +86,13 @@ void Project::Init()
 	SetShapeMaterial(5, 4);
 	SetShapeMaterial(6, 4);
 	SetShapeMaterial(9, 5);
+
+	AddShape(Cube, -1, TRIANGLES);
+	SetShapeShader(10, 2);
+	SetShapeMaterial(10,3);
+	selected_data_index = 10;
+	ShapeTransformation(zTranslate, -10, 0);
+	// ShapeTransformation(xTranslate, 4, 0);
 
 
 
@@ -137,6 +147,7 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	s->SetUniformMat4f("Proj", Proj);
 	s->SetUniformMat4f("View", View);
 	s->SetUniformMat4f("Model", Model);
+	s->SetUniform1i("fog", (int)fog);
 	if (data_list[shapeIndx]->GetMaterial() >= 0 && !materials.empty())
 	{
 //		materials[shapes[pickedShape]->GetMaterial()]->Bind(textures);
