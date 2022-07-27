@@ -453,13 +453,17 @@ void Renderer::MoveCamera(int cameraIndx, int type, float amt)
     switch (type)
     {
         case xTranslate:
-            cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0), Eigen::Vector3d(amt, 0, 0)); //MakeTransNoScale was here
+            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(amt, 0, 0), 1);
+            // cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0), Eigen::Vector3d(amt, 0, 0)); //MakeTransNoScale was here
             break;
         case yTranslate:
-            cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0),Eigen::Vector3d(0, amt, 0)); //MakeTransNoScale was here
+            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, amt, 0), 1);
+
+            // cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0),Eigen::Vector3d(0, amt, 0)); //MakeTransNoScale was here
             break;
         case zTranslate:
-            cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0),Eigen::Vector3d(0, 0, amt)); //MakeTransNoScale was here
+            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, 0, amt), 1);
+            // cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0),Eigen::Vector3d(0, 0, amt)); //MakeTransNoScale was here
             break;
         case xRotate:
             cameras[cameraIndx]->MyRotate(Eigen::Vector3d(1, 0, 0), amt);
@@ -472,6 +476,9 @@ void Renderer::MoveCamera(int cameraIndx, int type, float amt)
             break;
         case scaleAll:
             cameras[cameraIndx]->MyScale( Eigen::Vector3d(amt, amt,  amt));
+            break;
+        case resetPos:
+            cameras[cameraIndx]->ZeroTrans();
             break;
         default:
             break;

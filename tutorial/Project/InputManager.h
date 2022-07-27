@@ -4,6 +4,10 @@
 #include "Project.h"
 #include "imgui/imgui.h"
 
+static void printMat(const Eigen::Matrix4d& mat)
+{
+
+}
 
 	void glfw_mouse_callback(GLFWwindow* window,int button, int action, int mods)
 	{	
@@ -154,22 +158,16 @@
 				// scn->ShapeTransformation(scn->scaleAll, 60.0f,0);
 				// scn->SetShapeMaterial(0, 1);
 				break;
-
 			case GLFW_KEY_UP:
 				rndr->MoveCamera(scn->currCamera, scn->xRotate, 0.05f);
-				
 				break;
 			case GLFW_KEY_DOWN:
-				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
-				//cout<< "down: "<<endl;
 				rndr->MoveCamera(scn->currCamera, scn->xRotate, -0.05f);
 				break;
 			case GLFW_KEY_LEFT:
 				rndr->MoveCamera(scn->currCamera, scn->yRotate, 0.05f);
 				break;
 			case GLFW_KEY_RIGHT:
-				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
-				//cout<< "down: "<<endl;
 				rndr->MoveCamera(scn->currCamera, scn->yRotate, -0.05f);
 				break;
 			case GLFW_KEY_U:
@@ -181,17 +179,26 @@
 			case GLFW_KEY_L:
 				rndr->MoveCamera(scn->currCamera, scn->xTranslate, -0.25f);
 				break;
-			
 			case GLFW_KEY_R:
 				rndr->MoveCamera(scn->currCamera, scn->xTranslate, 0.25f);
 				break;
-			
 			case GLFW_KEY_B:
 				rndr->MoveCamera(scn->currCamera, scn->zTranslate, 0.5f);
 				break;
 			case GLFW_KEY_F:
 				rndr->MoveCamera(scn->currCamera, scn->zTranslate, -0.5f);
 				break;
+			case GLFW_KEY_Z:
+				if(rndr->IsPicked() && !(rndr->IsMany()) && scn->selected_data_index > 9){
+					Eigen::Matrix4d tmp = scn->data()->MakeTransd();
+					rndr->MoveCamera(scn->currCamera, rndr->resetPos,0);//to zero
+					rndr->MoveCamera(scn->currCamera, scn->xTranslate, tmp(0,3));
+					rndr->MoveCamera(scn->currCamera, scn->yTranslate, tmp(1,3));
+					rndr->MoveCamera(scn->currCamera, scn->zTranslate, tmp(2,3));
+					rndr->MoveCamera(scn->currCamera, scn->zTranslate, 5.0f);
+				}
+				break;
+
 			case GLFW_KEY_1:
 				std::cout << "picked 1" << std::endl;
 				scn->selected_data_index = 1;

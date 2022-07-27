@@ -91,7 +91,7 @@ void Project::Init()
 	SetShapeShader(10, 2);
 	SetShapeMaterial(10,3);
 	selected_data_index = 10;
-	ShapeTransformation(zTranslate, -10, 0);
+	ShapeTransformation(zTranslate, -10, 1);
 	// ShapeTransformation(xTranslate, 4, 0);
 
 

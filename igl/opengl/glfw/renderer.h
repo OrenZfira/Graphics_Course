@@ -37,7 +37,8 @@ public:
         scaleAll,
         xCameraTranslate,
         yCameraTranslate,
-        zCameraTranslate
+        zCameraTranslate,
+        resetPos
     };
     enum drawFlags {
         toClear = 1,
