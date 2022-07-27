@@ -93,7 +93,7 @@ Eigen::Vector3d Bezier :: GetVelocity(int segid, float t, float dt){
         + 6*(1-t)*t*(cps[segid*4+2]-cps[segid*4+1])
         + 3*t*t*(cps[segid*4+3]-cps[segid*4+2]);
     derivative.normalize();
-    return (derivative)*dt*2;
+    return (derivative)*dt*3;
 }
 
 

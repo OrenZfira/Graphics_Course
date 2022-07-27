@@ -18,12 +18,15 @@ Project::Project()
 {
 	x=0;
 	y=0;
+	currMap = 0;
+	time = 3;
+	currCamera = 0;
+	t = 0;
 }
 
 //Project::Project(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
 //{ 	
 //}
-
 void Project::Init()
 {		
 	unsigned int texIDs[6] = { 0 , 1, 2, 3, 4, 5};
@@ -44,7 +47,7 @@ void Project::Init()
 	AddTexture("textures/grass.bmp", 2);
 	AddTexture("textures/snake1.png",2);
 	AddTexture("textures/black-square.png",2);
-	//AddTexture("../res/textures/Cat_bump.jpg", 2);
+	
 
 	AddMaterial(texIDs,slots, 1);
 	AddMaterial(texIDs+1, slots+1, 1);
@@ -54,127 +57,71 @@ void Project::Init()
 	AddMaterial(texIDs + 5, slots + 5, 1);
 
 	AddShape(Cube, -2, TRIANGLES);
-	AddShape(zCylinder, -1, TRIANGLES);
-	AddShape(zCylinder, 1, TRIANGLES);
-	AddShape(zCylinder, 2, TRIANGLES);
 	AddShape(Axis, -1, LINES, 5);
-	// AddShape(zCylinder, -1, TRIANGLES,1);
-
 	AddShape(Plane, -2, TRIANGLES, 2);
+
+	//right side
 	AddShape(Octahedron, -1, TRIANGLES,1);
 	AddShape(Octahedron, -1, TRIANGLES,1);
 	AddShape(Octahedron, -1, TRIANGLES,1);
 	AddShape(Octahedron, -1, TRIANGLES,1);
-
-	// AddShape(Cube, -2, TRIANGLES, 1);
-
-
-
+	AddShape(Cube, -1, TRIANGLES, 4);
+	AddShape(Axis, -1, LINES, 4);
+	AddShape(Plane, -1, TRIANGLES, 4);
 
 	SetShapeShader(1, 2);
-	SetShapeShader(2, 2);
+	SetShapeShader(2, 4);
 	SetShapeShader(3, 2);
 	SetShapeShader(4, 2);
-	SetShapeShader(5, 4);
+	SetShapeShader(5, 2);
 	SetShapeShader(6, 2);
-	SetShapeShader(7, 2);
-	SetShapeShader(8, 2);
-	SetShapeShader(9, 2);
-
-
-
-
-	SetShapeMaterial(1, 3);
-	SetShapeMaterial(2, 3);	
-	SetShapeMaterial(3, 3);	
-	SetShapeMaterial(4, 3);
-	SetShapeMaterial(5, 0);
-	SetShapeMaterial(6, 4);
-	SetShapeMaterial(7, 4);
-	SetShapeMaterial(8, 4);
-	SetShapeMaterial(9, 4);
 
 	SetShapeMaterial(0, 0);
-	// SetShapeMaterial(10, 1);
+	SetShapeMaterial(2, 3);	
+	SetShapeMaterial(3, 4);	
+	SetShapeMaterial(4, 4);
+	SetShapeMaterial(5, 4);
+	SetShapeMaterial(6, 4);
+	SetShapeMaterial(9, 5);
+
 
 
 	selected_data_index = 0;
-	float cylinderLen = 1.6f;
 	float s = 60;
 	ShapeTransformation(scaleAll, s,0);
-	// selected_data_index = 10;
-	// ShapeTransformation(scaleAll, s,0);
-	selected_data_index = 1;
-	data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
-	ShapeTransformation(zTranslate, cylinderLen / 2.0, 1);
-	
-	selected_data_index = 2;
-	ShapeTransformation(zTranslate, cylinderLen , 1);
-	data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
-	
-	selected_data_index = 3;
-	ShapeTransformation(zTranslate, cylinderLen, 1);
-	data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
 
-	selected_data_index = 5;
+
+
+	selected_data_index = 2;
 	ShapeTransformation(zTranslate, -1.1, 1);
-	selected_data_index = 0;
+
+	selected_data_index = 6;
 	SetShapeStatic(0);
+	SetShapeStatic(2);
+	SetShapeStatic(3);
+	SetShapeStatic(4);
 	SetShapeStatic(5);
 	SetShapeStatic(6);
-	selected_data_index = 6;
-	ShapeTransformation(zTranslate, -10, 1);
-
 	SetShapeStatic(7);
-	selected_data_index = 7;
-	ShapeTransformation(zTranslate, -10, 1);
 	SetShapeStatic(8);
-	selected_data_index = 8;
-	ShapeTransformation(zTranslate, -10, 1);
-	selected_data_index = 9;
 	SetShapeStatic(9);
 
-	ShapeTransformation(zTranslate, -10, 1);
 
-	for(int i = 6 ; i < 10; i++){
+	for(int i = 3 ; i < 7; i++){
 		selected_data_index = i;
 		data()->MyScale({0.03f, 0.03f, 0.03f});
-		data()->MyTranslate(bezier->cps[i-6],0);
+		data()->MyTranslate(bezier->cps[i-3],0);
 	
 	}
-	currMap = 0;
-	time = 3;
-	currCamera = 0;
-	t = 0;
 
 	std::vector<Eigen::RowVector3d> points = bezier->GetPointsInSegment(0);
-	AddShape(Cube, -1, TRIANGLES, 4);
-	selected_data_index = 10;
+	selected_data_index = 7;
 	data()->show_faces = 0;
 	data()->show_lines = 0;
 	data()->show_overlay = 0xFF;
 	for (int i =0; i<points.size()-1; i++){
 		data()->add_edges(points[i],points[i+1], Eigen::RowVector3d(0,1,1));
 	}
-
-	AddShape(Axis, -1, LINES, 4);
-	AddShape(Plane, -1, TRIANGLES, 4);
-
-	SetShapeShader(11, 2);
-	SetShapeShader(12, 2);
-
-
-	SetShapeMaterial(12, 5);
-	SetShapeStatic(10);
-	SetShapeStatic(11);
-	SetShapeStatic(12);
-
-	selected_data_index = 12;
-	data()->MyTranslate({0,0,-20},1);
-	ShapeTransformation(scaleAll, 100, 1);
-
-
-
 
 	selected_data_index = 0;
 
@@ -222,10 +169,11 @@ void Project::Animate() {
 			selected_data_index = 0;
 			return;
 		}
-		Eigen::vector4d vel = bezier->GetVelocity(0,t, dt);
+		Eigen::Vector3d vel = bezier->GetVelocity(0,t, dt);
 		for(int i = 0; i < data_list.size(); i++){
 			if (data_list[i]->viewports & 1 && !(data_list[i]->IsStatic()) && parents[i] == -1){
 				selected_data_index = i;
+				data()->MyTranslate(vel, 0);
 			}
 		}
 		t+=dt;

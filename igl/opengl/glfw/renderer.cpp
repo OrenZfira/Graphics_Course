@@ -216,7 +216,7 @@ void Renderer::AddCamera(const Eigen::Vector3d& pos, float fov, float relationWH
     // }
     cameras.push_back(new igl::opengl::Camera(fov, relationWH, zNear, zFar));
     cameras.back()->MyTranslate(pos, false);
-    std::cout << cameras.size() << std::endl;
+    // std::cout << cameras.size() << std::endl;
 }
 
 void Renderer::SwitchCamera(std::vector<int> drawInfs, int camera){
@@ -317,10 +317,7 @@ bool Renderer::Picking(int x, int y, int vpid)
 {
     Eigen::Vector3i pos;
     unsigned char data[3];
-    // Clear
     Clear(0,0,0,0,GL_DEPTH_BUFFER_BIT);
-    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    // glDisable(GL_LIGHTING);
     Eigen::Matrix4f Proj = cameras[drawInfos[0]->cameraIndx]->GetViewProjection().cast<float>();
     Eigen::Matrix4f View = cameras[drawInfos[0]->cameraIndx]->MakeTransScaled().inverse().cast<float>();
     if(vpid == 1){
@@ -328,12 +325,10 @@ bool Renderer::Picking(int x, int y, int vpid)
         View = cameras[1]->MakeTransScaled().inverse().cast<float>();
     }
 
-    // scn->Draw(0, Proj, View, vpid, 65536,1);
     draw_by_info(vpid*2);
     // glFlush();
     // glFinish();
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    std::cout << "x: " << x <<std::endl;
     glReadPixels(x, 800-y, 1, 1,GL_RGB, GL_UNSIGNED_BYTE, data);
     isPicked = scn->Picking(data,vpid);
     std::cout << "Picked: " << scn->selected_data_index << std::endl;

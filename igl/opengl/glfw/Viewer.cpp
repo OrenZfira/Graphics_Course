@@ -723,9 +723,6 @@ IGL_INLINE bool
 
     bool Viewer::Picking(unsigned char data[4], int newViewportIndx)
     {
-        for (int i =0; i<3; i++){
-            std::cout << "data[" <<i <<"]: " << (int)data[i] << std::endl; 
-        }
         selected_data_index = data[0]+data[1]*256+data[2]*65536;
         if (selected_data_index != 0){
             return true;

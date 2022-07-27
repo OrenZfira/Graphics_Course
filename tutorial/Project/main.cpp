@@ -1,7 +1,10 @@
 #include "igl/opengl/glfw/renderer.h"
 #include "Project.h"
 #include "InputManager.h"
-
+//drawinfos: 0, 1, 4, 6, 7, 8, 9 left side
+//viewports: 0, 2, 3, 5 left side
+//drawinfos: 2, 3, 5 right side
+//viewports: 1, 4 right side
 int main(int argc,char *argv[])
 {
 	const int DISPLAY_WIDTH = 1200;

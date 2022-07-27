@@ -289,7 +289,6 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     if (tidx != -1){
       unsigned int arr[1] = {tidx};
       int matid  = viewer->AddMaterial(arr, arr, 1);
-            std::cout << viewer->selectedShapes.size() << std::endl;
 
       //selected == -1 if there was no single picking after multi picking i.e. the multipicking is the real picking
       if (viewer->selectedShapes.size() > 0 && viewer->selected == -1){ 
@@ -346,7 +345,6 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
       bool tmp = viewer->showLayers[i];
       if (ImGui::Checkbox(listLabel, &tmp))
       {
-        std::cout << i << std::endl;
         viewer->showLayers[i] = tmp;
         if(!viewer->showLayers[i]){
           for (int shape : viewer->layers[i]){

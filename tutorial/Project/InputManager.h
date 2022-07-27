@@ -97,11 +97,11 @@
 				float ydiff = (- ypos + scn->y)/400.0;
 				float xdiff = (xpos-scn->x)/400.0;
 				Eigen::Vector3d temp = Eigen::Vector3d(xdiff,ydiff,0);
-				if (scn->selected_data_index >= 6 && scn->selected_data_index <= 9){
+				if (scn->selected_data_index >= 3 && scn->selected_data_index <= 6){
 					scn->data()->MyTranslate(temp, false);
-					scn->bezier->ChangeCpt(scn->selected_data_index-6, temp);
+					scn->bezier->ChangeCpt(scn->selected_data_index-3, temp);
 					int index = scn->selected_data_index;
-					scn->selected_data_index = 10;
+					scn->selected_data_index = 7;
 					scn->data()->clear_edges();
 					std::vector<Eigen::RowVector3d> points = scn->bezier->GetPointsInSegment(0);
 					for (int i =0; i<points.size()-1; i++){
