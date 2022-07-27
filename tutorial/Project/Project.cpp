@@ -73,10 +73,10 @@ void Project::Init()
 
 	SetShapeShader(1, 2);
 	SetShapeShader(2, 4);
-	SetShapeShader(3, 2);
-	SetShapeShader(4, 2);
-	SetShapeShader(5, 2);
-	SetShapeShader(6, 2);
+	SetShapeShader(3, 3);
+	SetShapeShader(4, 3);
+	SetShapeShader(5, 3);
+	SetShapeShader(6, 3);
 	SetShapeShader(9, 3);
 
 	SetShapeMaterial(0, 0);
@@ -148,6 +148,7 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	s->SetUniformMat4f("View", View);
 	s->SetUniformMat4f("Model", Model);
 	s->SetUniform1i("fog", (int)fog);
+	s->SetUniform4f ("camera", cameraLocs[currCamera][0],cameraLocs[currCamera][1],cameraLocs[currCamera][2], 0);
 	if (data_list[shapeIndx]->GetMaterial() >= 0 && !materials.empty())
 	{
 //		materials[shapes[pickedShape]->GetMaterial()]->Bind(textures);

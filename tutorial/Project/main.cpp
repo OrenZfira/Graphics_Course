@@ -26,6 +26,7 @@ int main(int argc,char *argv[])
 	scn->Init();    //adding shaders, textures, shapes to scene
     rndr->Init(scn,x,y,3,menu); // adding scene and viewports to the renderer
     disp.SetRenderer(rndr);
+	scn->cameraLocs.push_back({0,0,10});
 	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
 	rndr->AddViewport(0,0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
 	rndr->AddViewport(DISPLAY_WIDTH/2, 0,DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
@@ -45,7 +46,9 @@ int main(int argc,char *argv[])
 	rndr->AddDraw(2, 0, 4, 0, rndr->stencilTest | rndr->depthTest);
 	rndr->AddDraw(5,0,2,0,0);
 	rndr->AddCamera(Eigen::Vector3d(0,0,10), 0, (float)DISPLAY_WIDTH/(float)DISPLAY_HEIGHT/2, NEAR, FAR, 3);
-	rndr->AddCamera(Eigen::Vector3d(0.5, 0.5,10), 30.0, (float)1200/(float)1600, 1.0f, 120.0f, 4);
+	scn->cameraLocs.push_back({0,0,10});
+	rndr->AddCamera(Eigen::Vector3d(0.5, 0.5,10), 45.0, (float)1200/(float)1600, 1.0f, 120.0f, 4);
+	scn->cameraLocs.push_back({0.5,0.5,10});
 	rndr->SwitchCamera({2,3,5}, 1);
 
     disp.launch_rendering(rndr);

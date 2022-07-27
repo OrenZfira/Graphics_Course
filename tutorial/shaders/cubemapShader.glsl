@@ -14,7 +14,7 @@ uniform int fog;
 out vec4 Color;
 void main()
 {
-	vec4  fog_colour = vec4(0.6, 0.6, 0.6, 0);
+	vec4  fog_colour = vec4(0.8, 0.8, 0.8, 0);
 
 	Color = mix(vec4(texture(sampler1, lookat).xyz,0), fog_colour, 0.8*fog);
 }  

@@ -60,6 +60,7 @@ static void printMat(const Eigen::Matrix4d& mat)
 		else
 		{
 			rndr->MoveCamera(scn->currCamera, rndr->zTranslate, (float)yoffset);
+			scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, 0, yoffset});
 		}
 		
 	}
@@ -131,9 +132,7 @@ static void printMat(const Eigen::Matrix4d& mat)
 	{
 		Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 		Project* scn = (Project*)rndr->GetScene();
-		Eigen::Vector3d pos = Eigen::Vector3d(0, 0,10);
 		std::vector<int> tmp = {0,1, 4,6,7,8};
-		//rndr->FreeShapes(2);
 		if (action == GLFW_PRESS || action == GLFW_REPEAT)
 		{
 			switch (key)
@@ -143,20 +142,11 @@ static void printMat(const Eigen::Matrix4d& mat)
 				break;
 				
 			case GLFW_KEY_SPACE:
-				// if (scn->IsActive())
-				// 	scn->Deactivate();
-				// else
-				// 	scn->Activate();
-				// rndr->AddCamera(pos, 45.0, (float)1200/(float)1600, 1.0f, 120.0f, 1);
-				// rndr->MoveCamera(2, rndr->xTranslate, 2);
 				if(scn->currCamera == 0)
 					scn->currCamera = 2;
 				else
 					scn->currCamera =0;
 				rndr->SwitchCamera(tmp, scn->currCamera);
-				// scn->selected_data_index = 0;
-				// scn->ShapeTransformation(scn->scaleAll, 60.0f,0);
-				// scn->SetShapeMaterial(0, 1);
 				break;
 			case GLFW_KEY_UP:
 				rndr->MoveCamera(scn->currCamera, scn->xRotate, 0.05f);
@@ -172,21 +162,27 @@ static void printMat(const Eigen::Matrix4d& mat)
 				break;
 			case GLFW_KEY_U:
 				rndr->MoveCamera(scn->currCamera, scn->yTranslate, 0.25f);
+				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, 0.25, 0});
 				break;
 			case GLFW_KEY_D:
 				rndr->MoveCamera(scn->currCamera, scn->yTranslate, -0.25f);
+				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, -0.25, 0});
 				break;
 			case GLFW_KEY_L:
 				rndr->MoveCamera(scn->currCamera, scn->xTranslate, -0.25f);
+				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({-0.25, 0, 0});
 				break;
 			case GLFW_KEY_R:
 				rndr->MoveCamera(scn->currCamera, scn->xTranslate, 0.25f);
+				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0.25, 0, 0});
 				break;
 			case GLFW_KEY_B:
 				rndr->MoveCamera(scn->currCamera, scn->zTranslate, 0.5f);
+				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, 0, 0.5});
 				break;
 			case GLFW_KEY_F:
 				rndr->MoveCamera(scn->currCamera, scn->zTranslate, -0.5f);
+				scn->cameraLocs[scn->currCamera]+=Eigen::Vector3d({0, 0, -0.5});
 				break;
 			case GLFW_KEY_Z:
 				if(rndr->IsPicked() && !(rndr->IsMany()) && scn->selected_data_index > 9){
@@ -196,22 +192,10 @@ static void printMat(const Eigen::Matrix4d& mat)
 					rndr->MoveCamera(scn->currCamera, scn->yTranslate, tmp(1,3));
 					rndr->MoveCamera(scn->currCamera, scn->zTranslate, tmp(2,3));
 					rndr->MoveCamera(scn->currCamera, scn->zTranslate, 5.0f);
+					scn->cameraLocs[scn->currCamera]=Eigen::Vector3d({tmp(3,0), tmp(1,3), tmp(2,3)+5});
 				}
 				break;
 
-			case GLFW_KEY_1:
-				std::cout << "picked 1" << std::endl;
-				scn->selected_data_index = 1;
-				break;
-			case GLFW_KEY_2:
-				std::cout << "picked 2" <<std::endl;
-				scn->selected_data_index = 2;
-				break;
-			case GLFW_KEY_3:
-				std::cout << "picked 3\n";
-				scn->selected_data_index = 3;
-				scn->data_list[3]->AddViewport(2);
-				break;
 			default:
 				break;
 

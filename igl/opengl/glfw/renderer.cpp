@@ -215,7 +215,7 @@ void Renderer::AddCamera(const Eigen::Vector3d& pos, float fov, float relationWH
         // drawInfos[infoIndx-1]->SetCamera(cameras.size());
     // }
     cameras.push_back(new igl::opengl::Camera(fov, relationWH, zNear, zFar));
-    cameras.back()->MyTranslate(pos, false);
+    cameras.back()->MyTranslate(pos, true);
     // std::cout << cameras.size() << std::endl;
 }
 

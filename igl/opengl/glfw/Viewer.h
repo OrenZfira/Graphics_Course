@@ -166,6 +166,7 @@ public:
 	bool isActive;
     float time;
     bool fog;
+    std::vector<Eigen::Vector3d> cameraLocs;
 
     unsigned int staticScene;
     int selected;
