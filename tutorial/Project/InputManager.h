@@ -75,6 +75,20 @@
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 			{
 				rndr->MouseProccessing(GLFW_MOUSE_BUTTON_LEFT, scn->currCamera);
+
+				// float ydiff = (ypos-scn->y > 0) ? 0.05f : ((ypos-scn->y < 0) ? -0.05f : 0);
+				// float xdiff = (xpos-scn->x > 0) ? 0.05f : ((xpos-scn->x < 0) ? -0.05f : 0);
+				// Eigen::Matrix4d translate = scn->data()->MakeTransd();
+				// Eigen::Vector3d center = {translate(0,3), translate(1,3), translate(2,3)};
+				// scn->SetCenterOfRotation(center);
+				// // scn->ShapeTransformation(scn->xRotate, ydiff, 1);
+				// // scn->ShapeTransformation(scn->yRotate, xdiff, 1);
+				// // scn->data()->RotateInSystem(Eigen::Vector3d(ydiff,xdiff,0),0.05);
+				// scn->data()->MyRotate(Eigen::Vector3d(ydiff,xdiff,0),0.05);
+				// // scn->data()->RotateInSystem(Eigen::Vector3d(1,0,0), ydiff);
+				// // scn->data()->RotateInSystem(Eigen::Vector3d(0,1,0), xdiff);
+				// scn->y = ypos;
+				// scn->x = xpos;
 			}
 			else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && rndr->IsPicked() && rndr->IsMany()){
 				float ydiff = (- ypos + scn->y)/400.0;
@@ -82,13 +96,11 @@
 
 				for(int i : scn->pShapes){
 					scn->selected_data_index = i;
-					scn->data()->MyTranslate(Eigen::Vector3d(xdiff,ydiff,0), false);
+					scn->data()->MyTranslate(Eigen::Vector3d(xdiff,ydiff,0), 1);
 				}
 				scn->y = ypos;
 				scn->x = xpos;				
-				}
-					
-
+			}	
 		}
 		else
 		{
