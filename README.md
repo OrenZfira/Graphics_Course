@@ -34,8 +34,7 @@ The Project consists of the following features:
     - Multi Picking
         - Right Side - Nothing
         - Translation
-        - All Menu Operations Except:
-            - Reset Shape (works only on one the objects)
+        - All Menu Operations Except Reset Shape
     - Highlight Picked Objects
 6. Other
     - Change Background
