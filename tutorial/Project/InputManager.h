@@ -160,14 +160,6 @@ static void printMat(const Eigen::Matrix4d& mat)
 			case GLFW_KEY_ESCAPE:
 				glfwSetWindowShouldClose(window, GLFW_TRUE);
 				break;
-				
-			case GLFW_KEY_SPACE:
-				if(scn->currCamera == 0)
-					scn->currCamera = 2;
-				else
-					scn->currCamera =0;
-				rndr->SwitchCamera(tmp, scn->currCamera);
-				break;
 			case GLFW_KEY_UP:
 				rndr->MoveCamera(scn->currCamera, scn->xRotate, 0.05f);
 				if(scn->currCamera>1)
