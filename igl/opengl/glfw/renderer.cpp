@@ -337,35 +337,6 @@ bool Renderer::Picking(int x, int y, int vpid)
         scn->pShapes.push_back(scn->selected_data_index);
     }
     return true;
-    // if(isPicked){
-    //     Eigen::Matrix3d rotMat = scn->GetRotation();
-    //     Eigen::Vector3d tmp = Eigen::Vector3d(int(data[0]), int(data[1]), int(data[2])) ;
-    //     Eigen::Vector3d diraction = (rotMat * tmp);         
-    //     if(tmp(0) == 1){//right or left wall rotation
-    //         if(diraction(2) > 0)//left wall rotation
-    //             scn->selected_data_index = 2;
-    //         else//right wall rotation
-    //             scn->selected_data_index = 3;
-    //         return true;
-    //     }
-    //     if(tmp(1) == 1){//top or bottom wall rotation
-    //         if(diraction(2) > 0)//top wall rotation
-    //             scn->selected_data_index = 4;
-    //         else//bottom wall rotation
-    //             scn->selected_data_index = 5;
-    //         return true;
-    //         // std::cout << "diraction: " <<diraction(i) << std::endl;
-    //     }
-    //     if(tmp(2) == 1 ){//front or back wall rotation
-    //         if(diraction(2) > 0)//fornt wall rotation
-    //             scn->selected_data_index = 0;
-    //         else//back wall rotation
-    //             scn->selected_data_index = 1;
-    //         return true;
-    //     }        
-        
-    // }
-    // return false;
 
 }
 
@@ -453,16 +424,16 @@ void Renderer::MoveCamera(int cameraIndx, int type, float amt)
     switch (type)
     {
         case xTranslate:
-            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(amt, 0, 0), 0);
+            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(amt, 0, 0), 1);
             // cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0), Eigen::Vector3d(amt, 0, 0)); //MakeTransNoScale was here
             break;
         case yTranslate:
-            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, amt, 0), 0);
+            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, amt, 0), 1);
 
             // cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0),Eigen::Vector3d(0, amt, 0)); //MakeTransNoScale was here
             break;
         case zTranslate:
-            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, 0, amt), 0);
+            cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, 0, amt), 1);
             // cameras[cameraIndx]->TranslateInSystem(cameras[cameraIndx]->MakeTransd().block<3,3>(0,0),Eigen::Vector3d(0, 0, amt)); //MakeTransNoScale was here
             break;
         case xRotate:
