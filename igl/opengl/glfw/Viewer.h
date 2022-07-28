@@ -180,6 +180,7 @@ public:
     int animCamera;
     bool finished;
     std::vector<int> cameraShapes;
+    std::map<int, int> cameraShapesMap;
 
     Shader* overlay_shader;
     Shader* overlay_point_shader;

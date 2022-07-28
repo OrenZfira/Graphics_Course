@@ -217,12 +217,12 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
       }
     }
   }
-    ImGui::Checkbox("Orthographic view", &(camera[0]->_ortho));
-    if (camera[0]->_ortho) {
-        camera[0]->SetProjection(0,camera[0]->_relationWH);
+    ImGui::Checkbox("Orthographic view", &(camera[viewer->currCamera]->_ortho));
+    if (camera[viewer->currCamera]->_ortho) {
+        camera[viewer->currCamera]->SetProjection(0,camera[viewer->currCamera]->_relationWH);
       }
     else {
-        camera[0]->SetProjection(camera[0]->_fov > 0 ? camera[0]->_fov : 45,camera[0]->_relationWH);
+        camera[viewer->currCamera]->SetProjection(camera[viewer->currCamera]->_fov > 0 ? camera[viewer->currCamera]->_fov : 45,camera[viewer->currCamera]->_relationWH);
       }
     ImGui::Checkbox("Fog", &(viewer->fog));
     ImGui::ColorEdit3("Fog Colour", viewer->fog_colour);
@@ -247,19 +247,18 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
       //selected == -1 if there was no single picking after multi picking i.e. the multipicking is the real picking
       if (viewer->selectedShapes.size() > 0 && viewer->selected == -1){ 
         for (int shape : viewer->selectedShapes){
-          if (shape != 0){
+          if (shape != 0 && viewer->cameraShapesMap.find(shape) == viewer->cameraShapesMap.end()){
             viewer->SetShapeMaterial(shape, matid);
           }
       }
     
       }
       else{
-        if (viewer->selected != 0){
+        if (viewer->selected != 0 && viewer->cameraShapesMap.find(viewer->selected) == viewer->cameraShapesMap.end()){
           viewer->SetShapeMaterial(viewer->selected, matid);
         }
       }
     }
-      
   }
 
   if (ImGui::Button("Blend on/off", ImVec2(-1, 0))){
@@ -301,11 +300,10 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     if (viewer->selected > 0 && viewer->data_list[viewer->selected]->Is2Render(0))
       {
         viewer->data_list[viewer->selected]->ZeroTrans();
-        for (int i =0; i<viewer->cameraShapes.size(); i++){
-          if (viewer->cameraShapes[i] == viewer->selected){
-            camera[i+2]->ZeroTrans();
-            viewer->cameraLocs[i+2] = {0,0,0};
-          }
+        auto it = viewer->cameraShapesMap.find(viewer->selected);
+        if(it != viewer->cameraShapesMap.end()){
+            camera[it->second]->ZeroTrans();
+            viewer->cameraLocs[it->second-1] = {0,0,0};
         }
       }
   }
@@ -342,6 +340,7 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     {
       int id = viewer->AddShape(viewer->Cube, -1, viewer->TRIANGLES);
       viewer->cameraShapes.push_back(id);
+      viewer->cameraShapesMap[id] = camera.size();
       viewer->SetShapeShader(id, 2);
       viewer->SetShapeMaterial(id, 6);
       camera.push_back(new igl::opengl::Camera(45, 1200.0/1600.0, 1.0, 120));
@@ -376,10 +375,6 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
         }
         if(i != 0) viewer->currCamera = i + 1;
         else viewer->currCamera = 0;
-        // viewer->currCamera = i + 1;
-        // if(i == 0)
-        //   viewer->currCamera -= 1;
-
       }
     }
   }

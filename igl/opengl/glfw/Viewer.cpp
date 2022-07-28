@@ -663,7 +663,6 @@ IGL_INLINE bool
             {
 //                if (selected_data_index > 0 )
                     WhenRotate(scnMat * cameraMat, -((float)xrel/180) / movCoeff, ((float)yrel/180) / movCoeff);
-
             }
             else
             {
