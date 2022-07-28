@@ -14,8 +14,8 @@ The Project consists of the following features:
     - Adding Shapes/Cameras to Layers
     - Hiding/Showing Layers
 3. Cameras
-    - Adding Cameras
-    - Moving Cameras (as 3D shapes)
+    - Adding Cameras (as 3D shapes *Bonus*)
+    - Moving Cameras
     - Switching Cameras
     - Setting Animation Camera
     - Orthographic/Prespective view
