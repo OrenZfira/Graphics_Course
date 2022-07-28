@@ -1,4 +1,4 @@
-# [https://github.com/OrenZfira/Graphics_Course](Final Project)
+# [Final Project](https://github.com/OrenZfira/Graphics_Course)
 ## Oren Zfira and Sheer Maoz
 
 The Project consists of the following features:
