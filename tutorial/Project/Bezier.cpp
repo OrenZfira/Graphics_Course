@@ -73,22 +73,6 @@ Eigen::Vector3d Bezier::GetPointOnCurve(int segid, float t){
 
 
 Eigen::Vector3d Bezier :: GetVelocity(int segid, float t, float dt){
-    // float dt = 0.05;
-    // if(t < 1){
-    //     Eigen::Vector3d first = GetPointOnCurve(segid, t+dt);
-    //     std::cout << "first is: " << first << std::endl;
-
-    //     Eigen::Vector3d sec = GetPointOnCurve(segid, t);
-    //     std::cout << "second is: " << sec << std::endl;
-
-    //     return GetPointOnCurve(segid, t+dt) - GetPointOnCurve(segid, t);
-    // }
-    // else
-    //     if(segid < segNum - 1)
-    //         return GetVelocity(segid + 1, 0);
-    //     else
-    //         return Eigen::Vector3d(0,0,0);
-
     Eigen::Vector3d derivative = 3*(1-t)*(1-t)*(cps[segid*4+1]-cps[segid*4])
         + 6*(1-t)*t*(cps[segid*4+2]-cps[segid*4+1])
         + 3*t*t*(cps[segid*4+3]-cps[segid*4+2]);
