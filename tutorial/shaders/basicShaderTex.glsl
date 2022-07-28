@@ -15,7 +15,7 @@ uniform vec4 camera;
 void main()
 {
 	float fog_max = 30.0;
-	float fog_min = 2.0;
+	float fog_min = 5.0;
 	vec4  fog_colour = vec4(0.8, 0.8, 0.8, 0);
 	float dist = length(position0.xyz-camera.xyz);
 

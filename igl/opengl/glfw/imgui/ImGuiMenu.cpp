@@ -19,8 +19,10 @@
 //#include <imgui_fonts_droid_sans.h>
 //#include <GLFW/glfw3.h>
 #include <iostream>
+#include <windows.h> 
+#include <stdio.h>
+#include <tchar.h>
 ////////////////////////////////////////////////////////////////////////////////
-
 namespace igl
 {
 namespace opengl
@@ -202,6 +204,7 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     {
       int savedIndx = viewer->selected_data_index;
       viewer->open_dialog_load_mesh();
+      SetCurrentDirectory("..");
       if (viewer->data_list.size() > viewer->parents.size())
       {
         viewer->data()->type = 9;
@@ -243,7 +246,6 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     if (tidx != -1){
       unsigned int arr[1] = {tidx};
       int matid  = viewer->AddMaterial(arr, arr, 1);
-
       //selected == -1 if there was no single picking after multi picking i.e. the multipicking is the real picking
       if (viewer->selectedShapes.size() > 0 && viewer->selected == -1){ 
         for (int shape : viewer->selectedShapes){
@@ -311,14 +313,14 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
   if(ImGui::Button("Reset Rotation", ImVec2((w-p)/2.0, 0))){
     if (viewer->selectedShapes.size() > 0 && viewer->selected == -1){ 
         for (int shape : viewer->selectedShapes){
-          if (shape > 0){
+          if (shape > 0 && viewer->cameraShapesMap.find(shape) == viewer->cameraShapesMap.end()){
             viewer->data_list[shape]->ZeroRot();
           }
       }
     
       }
       else{
-        if (viewer->selected > 0){
+        if (viewer->selected > 0 && viewer->cameraShapesMap.find(viewer->selected) == viewer->cameraShapesMap.end()){
           viewer->data_list[viewer->selected]->ZeroRot();
         }
       }
@@ -338,7 +340,24 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     }
     if (ImGui::Button("Add Camera", ImVec2(-1,0)))
     {
-      int id = viewer->AddShape(viewer->Cube, -1, viewer->TRIANGLES);
+      int savedIndx = viewer->selected_data_index;
+      viewer->load_mesh_from_file("./data/cube.obj");
+      int id = viewer->data_list.size() - 1;
+      if (viewer->data_list.size() > viewer->parents.size())
+      {
+        viewer->data()->type = 9;
+        viewer->data()->mode = 4;
+        viewer->data()->shaderID = 2;
+        viewer->data()->viewports = 1;
+        viewer->data()->show_lines = 0;
+        viewer->data()->hide = false;
+        viewer->data()->show_overlay = 0;
+        viewer->SetShapeMaterial(id, 2);
+        viewer->parents.emplace_back(-1);
+        viewer->selected_data_index = savedIndx;
+      }
+
+      // int id = viewer->AddShape(viewer->Cube, -1, viewer->TRIANGLES);
       viewer->cameraShapes.push_back(id);
       viewer->cameraShapesMap[id] = camera.size();
       viewer->SetShapeShader(id, 2);

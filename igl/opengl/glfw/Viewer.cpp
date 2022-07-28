@@ -312,7 +312,6 @@ IGL_INLINE bool
   IGL_INLINE void Viewer::open_dialog_load_mesh()
   {
     std::string fname = igl::file_dialog_open();
-
     if (fname.length() == 0)
       return;
     this->load_mesh_from_file(fname.c_str());
