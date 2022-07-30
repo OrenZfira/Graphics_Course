@@ -340,24 +340,7 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
     }
     if (ImGui::Button("Add Camera", ImVec2(-1,0)))
     {
-      int savedIndx = viewer->selected_data_index;
-      viewer->load_mesh_from_file("./data/cube.obj");
-      int id = viewer->data_list.size() - 1;
-      if (viewer->data_list.size() > viewer->parents.size())
-      {
-        viewer->data()->type = 9;
-        viewer->data()->mode = 4;
-        viewer->data()->shaderID = 2;
-        viewer->data()->viewports = 1;
-        viewer->data()->show_lines = 0;
-        viewer->data()->hide = false;
-        viewer->data()->show_overlay = 0;
-        viewer->SetShapeMaterial(id, 2);
-        viewer->parents.emplace_back(-1);
-        viewer->selected_data_index = savedIndx;
-      }
-
-      // int id = viewer->AddShape(viewer->Cube, -1, viewer->TRIANGLES);
+      int id = viewer->AddShape(viewer->Cube, -1, viewer->TRIANGLES);
       viewer->cameraShapes.push_back(id);
       viewer->cameraShapesMap[id] = camera.size();
       viewer->SetShapeShader(id, 2);
@@ -379,7 +362,8 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
       strcat(label, integer_string);
       if (ImGui::Button(label, ImVec2(-1, 0))){
         std::vector<int> drawInfs = {0,1, 4,6,7,8};
-        if(viewer->currCamera != 0){
+        auto it = viewer->cameraLayers.find(viewer->currCamera);
+        if(viewer->currCamera != 0 && (it == viewer->cameraLayers.end() || viewer->showLayers[viewer->cameraLayers.at(viewer->currCamera)])){
           viewer->data_list[viewer->cameraShapes[viewer->currCamera-2]]->UnHide();
         }
         if(i != 0){
@@ -420,7 +404,8 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
   if(viewer->finished){
     std::vector<int> drawInfs = {0,1, 4,6,7,8};
     for (int i = 0; i < viewer->cameraShapes.size(); i++){
-        if (i+2 != viewer->currCamera){
+        auto it = viewer->cameraLayers.find(i+2);
+        if (i+2 != viewer->currCamera && (it == viewer->cameraLayers.end() || viewer->showLayers[viewer->cameraLayers.at(i+2)])){
           viewer->data_list[viewer->cameraShapes[i]]->UnHide();
         }
       }
@@ -457,7 +442,8 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
       std::cout << "Pause" << std::endl;
       viewer->Deactivate();
       for (int i = 0; i < viewer->cameraShapes.size(); i++){
-          if (i+2 != viewer->currCamera){
+          auto it = viewer->cameraLayers.find(i+2);
+          if (i+2 != viewer->currCamera && (it ==  viewer->cameraLayers.end() || viewer->showLayers[viewer->cameraLayers.at(i+2)])){
             viewer->data_list[viewer->cameraShapes[i]]->UnHide();
           }
       }
@@ -499,6 +485,9 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
           for (int shape : viewer->selectedShapes){
             if (shape != 0){
               viewer->layers[i].push_back(shape);
+              auto it = viewer->cameraShapesMap.find(shape);
+              if(it != viewer->cameraShapesMap.end())
+                viewer->cameraLayers[viewer->cameraShapesMap.at(shape)] = i;              
               if(!viewer->showLayers[i])
               viewer->data_list[shape]->Hide();
             }
@@ -506,6 +495,10 @@ IGL_INLINE void ImGuiMenu::draw_viewer_menu(igl::opengl::glfw::Viewer *viewer, s
         }
         else if(viewer->selected != 0){
           viewer->layers[i].push_back(viewer->selected);
+          auto it = viewer->cameraShapesMap.find(viewer->selected);
+          if(it != viewer->cameraShapesMap.end()){
+              viewer->cameraLayers[viewer->cameraShapesMap.at(viewer->selected)] = i;
+          }  
           if(!viewer->showLayers[i])
             viewer->data_list[viewer->selected]->Hide();
         }

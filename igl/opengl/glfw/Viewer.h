@@ -181,6 +181,7 @@ public:
     bool finished;
     std::vector<int> cameraShapes;
     std::map<int, int> cameraShapesMap;
+    std::map<int, int> cameraLayers;
 
     Shader* overlay_shader;
     Shader* overlay_point_shader;
